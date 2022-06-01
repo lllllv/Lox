@@ -5,6 +5,8 @@
 #include <sstream>
 #include <map>
 
+#include "token.h"
+
 using namespace std;
 
 
@@ -37,12 +39,12 @@ union iteral
 
 class Token
 {
-private:
+public:
 	TokenType type;
 	string lexeme;
 	iteral it;
 	int line;
-public:
+
 	Token(TokenType type, string lexeme, iteral it, int line);
 	string to_string();
 	void update_line(int line);
