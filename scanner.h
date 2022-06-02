@@ -31,10 +31,11 @@ enum TokenType {
 	ENDOFFILE
 };
 
-union iteral
+struct iteral
 {
 	bool boolean;
 	double val;
+    string str;
 };
 
 class Token

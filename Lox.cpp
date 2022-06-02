@@ -23,7 +23,7 @@ void Lox::run_file(string file)
 [[noreturn]] void Lox::run_promt()
 {
 	string code;
-	while (1)
+	while (true)
 	{
 		cout << "> ";
 		getline(cin, code);
@@ -37,8 +37,6 @@ void Lox::run_file(string file)
 
 void Lox::run_code(string code)
 {
-	
-	//cout << endl;
 
 	scanner s(code);
 	vector<Token> tokens = s.scan_Tokens();
@@ -51,7 +49,7 @@ Lox::Lox(int argc, char** argv)
 {
 	if (argc > 2)
 	{
-		cout << "Usage: jlox [script]" << endl;
+		cout << "Usage: lox [script]" << endl;
 		exit(0);
 	}
 	else if (argc == 2)

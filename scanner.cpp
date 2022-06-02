@@ -28,27 +28,27 @@ void scanner::scan_Token()
 	{
 		case '(':
 		{
-			this->tokens.emplace_back(Token(LEFT_PAREN, "", iteral{},  line));
+			this->tokens.emplace_back(Token(LEFT_PAREN, "(", iteral{},  line));
 			break;
 		}
 		case ')':
 		{
-			this->tokens.emplace_back(Token(RIGHT_PAREN, "", iteral{}, line));
+			this->tokens.emplace_back(Token(RIGHT_PAREN, ")", iteral{}, line));
 			break;
 		}
 		case '{':
 		{
-			this->tokens.emplace_back(Token(LEFT_BRACE, "", iteral{}, line));
+			this->tokens.emplace_back(Token(LEFT_BRACE, "{", iteral{}, line));
 			break;
 		}
 		case '}':
 		{
-			this->tokens.emplace_back(Token(RIGHT_BRACE, "", iteral{}, line));
+			this->tokens.emplace_back(Token(RIGHT_BRACE, "}", iteral{}, line));
 			break;
 		}
 		case ',':
 		{
-			this->tokens.emplace_back(Token(COMMA, "", iteral{}, line));
+			this->tokens.emplace_back(Token(COMMA, ",", iteral{}, line));
 			break;
 		}
 		case '.':
@@ -58,47 +58,79 @@ void scanner::scan_Token()
 		}
 		case '-':
 		{
-			this->tokens.emplace_back(Token(MINUS, "", iteral{}, line));
+			this->tokens.emplace_back(Token(MINUS, ".", iteral{}, line));
 			break;
 		}
 		case '+':
 		{
-			this->tokens.emplace_back(Token(PLUS, "", iteral{}, line));
+			this->tokens.emplace_back(Token(PLUS, "+", iteral{}, line));
 			break;
 		}
 		case ';':
 		{
-			this->tokens.emplace_back(Token(SEMICOLON, "", iteral{}, line));
+			this->tokens.emplace_back(Token(SEMICOLON, ";", iteral{}, line));
 			break;
 		}
 		case '*':
 		{
-			this->tokens.emplace_back(Token(STAR, "", iteral{}, line));
+			this->tokens.emplace_back(Token(STAR, "*", iteral{}, line));
 			break;
 		}
 
 		case '!':
 		{
-			TokenType t = match('=') ? BANG_EQUAL : BANG;
-			this->tokens.emplace_back(Token(t, "", iteral{}, line));
+            if(match('='))
+            {
+                TokenType t = BANG_EQUAL;
+                this->tokens.emplace_back(Token(t, "!=", iteral{}, line));
+            }
+            else
+            {
+                TokenType t = BANG;
+                this->tokens.emplace_back(Token(t, "!", iteral{}, line));
+            }
 			break;
 		}
 		case '=':
 		{
-			TokenType t = match('=') ? EQUAL_EQUAL : EQUAL;
-			this->tokens.emplace_back(Token(t, "", iteral{}, line));
+            if(match('='))
+            {
+                TokenType t = EQUAL_EQUAL;
+                this->tokens.emplace_back(Token(t, "==", iteral{}, line));
+            }
+            else
+            {
+                TokenType t = EQUAL;
+                this->tokens.emplace_back(Token(t, "=", iteral{}, line));
+            }
 			break;
 		}
 		case '<':
 		{
-			TokenType t = match('=') ? LESS_EQUAL : LESS;
-			this->tokens.emplace_back(Token(t, "", iteral{}, line));
+            if(match('='))
+            {
+                TokenType t = LESS_EQUAL;
+                this->tokens.emplace_back(Token(t, "<=", iteral{}, line));
+            }
+            else
+            {
+                TokenType t = LESS;
+                this->tokens.emplace_back(Token(t, "<", iteral{}, line));
+            }
 			break;
 		}
 		case '>':
 		{
-			TokenType t = match('=') ? GREATER_EQUAL : GREATER;
-			this->tokens.emplace_back(Token(t, "", iteral{}, line));
+            if(match('='))
+            {
+                TokenType t = GREATER_EQUAL;
+                this->tokens.emplace_back(Token(t, ">=", iteral{}, line));
+            }
+            else
+            {
+                TokenType t = GREATER;
+                this->tokens.emplace_back(Token(t, ">", iteral{}, line));
+            }
 			break;
 		}
 
@@ -111,7 +143,7 @@ void scanner::scan_Token()
 			}
 			else
 			{
-				this->tokens.emplace_back(Token(SLASH, "", iteral{}, line));
+				this->tokens.emplace_back(Token(SLASH, "/", iteral{}, line));
 			}
 
 			break;
@@ -202,11 +234,12 @@ void scanner::handle_string()
 		return;
 	}
 
-	
+	iteral it;
+    it.str = this->code.substr(this->start + 1, this->current - this->start - 1);
 
 	this->tokens.emplace_back(Token(STRING,
-		this->code.substr(this->start + 1, this->current - this->start - 1),
-		iteral{}, this->line));
+		"\"" + it.str + "\"",
+		it, this->line));
 
 	this->eat();
 }
@@ -259,29 +292,29 @@ scanner::scanner(string& code):code(code), start(0), current(0), line(1)
 {
 	this->end = code.length();
 	
-	this->keyword_table.insert(make_pair("and", Token(AND, "", iteral{}, 0)));
-	this->keyword_table.insert(make_pair("class", Token(CLASS, "", iteral{}, 0)));
-	this->keyword_table.insert(make_pair("else", Token(ELSE, "", iteral{}, 0)));
+	this->keyword_table.insert(make_pair("and", Token(AND, "and", iteral{}, 0)));
+	this->keyword_table.insert(make_pair("class", Token(CLASS, "class", iteral{}, 0)));
+	this->keyword_table.insert(make_pair("else", Token(ELSE, "else", iteral{}, 0)));
 
-	iteral it;
+	iteral it{};
 	it.boolean = false;
-	this->keyword_table.insert(make_pair("false", Token(FALSE, "", it, 0)));
+	this->keyword_table.insert(make_pair("false", Token(FALSE, "false", it, 0)));
 	
-	this->keyword_table.insert(make_pair("fun", Token(FUN, "", iteral{}, 0)));
-	this->keyword_table.insert(make_pair("for", Token(FOR, "", iteral{}, 0)));
-	this->keyword_table.insert(make_pair("if", Token(IF, "", iteral{}, 0)));
-	this->keyword_table.insert(make_pair("nil", Token(NIL, "", iteral{}, 0)));
-	this->keyword_table.insert(make_pair("or", Token(OR, "", iteral{}, 0)));
-	this->keyword_table.insert(make_pair("print", Token(PRINT, "", iteral{}, 0)));
-	this->keyword_table.insert(make_pair("return", Token(RETURN, "", iteral{}, 0)));
-	this->keyword_table.insert(make_pair("super", Token(SUPER, "", iteral{}, 0)));
-	this->keyword_table.insert(make_pair("this", Token(THIS, "", iteral{}, 0)));
+	this->keyword_table.insert(make_pair("fun", Token(FUN, "fun", iteral{}, 0)));
+	this->keyword_table.insert(make_pair("for", Token(FOR, "for", iteral{}, 0)));
+	this->keyword_table.insert(make_pair("if", Token(IF, "if", iteral{}, 0)));
+	this->keyword_table.insert(make_pair("nil", Token(NIL, "nil", iteral{}, 0)));
+	this->keyword_table.insert(make_pair("or", Token(OR, "or", iteral{}, 0)));
+	this->keyword_table.insert(make_pair("print", Token(PRINT, "print", iteral{}, 0)));
+	this->keyword_table.insert(make_pair("return", Token(RETURN, "return", iteral{}, 0)));
+	this->keyword_table.insert(make_pair("super", Token(SUPER, "super", iteral{}, 0)));
+	this->keyword_table.insert(make_pair("this", Token(THIS, "this", iteral{}, 0)));
 
 	it.boolean = true;
-	this->keyword_table.insert(make_pair("true", Token(TRUE, "", it, 0)));
+	this->keyword_table.insert(make_pair("true", Token(TRUE, "true", it, 0)));
 
-	this->keyword_table.insert(make_pair("var", Token(VAR, "", iteral{}, 0)));
-	this->keyword_table.insert(make_pair("while", Token(WHILE, "", iteral{}, 0)));
+	this->keyword_table.insert(make_pair("var", Token(VAR, "var", iteral{}, 0)));
+	this->keyword_table.insert(make_pair("while", Token(WHILE, "while", iteral{}, 0)));
 
 }
 
