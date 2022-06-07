@@ -53,12 +53,12 @@ void scanner::scan_Token()
 		}
 		case '.':
 		{
-			this->tokens.emplace_back(Token(DOT, "", iteral{}, line));
+			this->tokens.emplace_back(Token(DOT, ".", iteral{}, line));
 			break;
 		}
 		case '-':
 		{
-			this->tokens.emplace_back(Token(MINUS, ".", iteral{}, line));
+			this->tokens.emplace_back(Token(MINUS, "-", iteral{}, line));
 			break;
 		}
 		case '+':
@@ -331,146 +331,5 @@ vector<Token> scanner::scan_Tokens()
 	return this->tokens;
 }
 
-Token::Token(TokenType type, string lexeme,iteral it, int line):type(type), lexeme(lexeme), it(it), line(line)
-{
-
-}
-
-string Token::to_string()
-{
-	string s;
-	switch (this->type)
-	{
-	case LEFT_PAREN :
-			s = "LEFT_PAREN";
-			break;
-	case RIGHT_PAREN:
-		s = "RIGHT_PAREN";
-		break;
-	case LEFT_BRACE:
-		s = "LEFT_BRACE";
-		break;
-	case RIGHT_BRACE:
-		s = "RIGHT_BRACE";
-		break;
-	case COMMA:
-		s = "COMMA";
-		break;
-	case DOT:
-		s = "DOT";
-		break;
-	case MINUS:
-		s = "MINUS";
-		break;
-	case PLUS:
-		s = "PLUS";
-		break;
-	case SEMICOLON:
-		s = "SEMICOLON";
-		break;
-	case SLASH:
-		s = "SLASH";
-		break;
-	case BANG:
-		s = "BANG";
-		break;
-	case BANG_EQUAL:
-		s = "BANG_EQUAL";
-		break;
-	case EQUAL:
-		s = "EQUAL";
-		break;
-	case EQUAL_EQUAL:
-		s = "EQUAL_EQUAL";
-		break;
-	case GREATER:
-		s = "GREATER";
-		break;
-	case GREATER_EQUAL:
-		s = "GREATER_EQUAL";
-		break;
-	case LESS:
-		s = "LESS";
-		break;
-	case LESS_EQUAL:
-		s = "LESS_EQUAL";
-		break;
-
-	case ENDOFFILE:
-		s = "ENDOFFILE";
-		break;
-
-	case STRING:
-		s = "STRING";
-		s += "\tlexeme:";
-		s += this->lexeme;
-		break;
-	case NUMBER:
-		s = "NUMBER";
-		s += "\titeral:";
-		s += std::to_string(this->it.val);
-		break;
-	case IDENTIFIER:
-		s = "IDENTIFIER";
-		s += "\tlexeme:";
-		s += this->lexeme;
-		break;
-
-	case AND:
-		s = "AND";
-		break;
-	case CLASS:
-		s = "CLASS";
-		break;
-	case ELSE:
-		s = "ELSE";
-		break;
-	case FALSE:
-		s = "FALSE";
-		break;
-	case FUN:
-		s = "FUN";
-		break;
-	case FOR:
-		s = "FOR";
-		break;
-	case IF:
-		s = "IF";
-		break;
-	case PRINT:
-		s = "PRINT";
-		break;
-	case RETURN:
-		s = "RETURN";
-		break;
-	case SUPER:
-		s = "SUPER";
-		break;
-	case THIS:
-		s = "THIS";
-		break;
-	case TRUE:
-		s = "TRUE";
-		break;
-	case VAR:
-		s = "VAR";
-		break;
-	case WHILE:
-		s = "WHILE";
-		break;
-	}
-	stringstream ss;
-	ss << this->line;
-	string line;
-	ss >> line;
-	s += "\tline: ";
-	s += line;
-	return s;
-}
-
-void Token::update_line(int line)
-{
-	this->line = line;
-}
 
 

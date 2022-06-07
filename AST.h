@@ -24,8 +24,10 @@ public:
 
 class Expr : public AST_Node {
 public:
-    Expr() = default;;
+    Expr() = default;
     virtual ~Expr() = default;
+
+    //virtual void accept(Visitor* v);
 };
 
 class Literal_Expr : public Expr {

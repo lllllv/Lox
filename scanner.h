@@ -2,56 +2,11 @@
 #include <string>
 #include <vector>
 #include <iostream>
-#include <sstream>
 #include <map>
 
 #include "token.h"
 
 using namespace std;
-
-
-enum TokenType {
-	// Single-character tokens.
-	LEFT_PAREN, RIGHT_PAREN, LEFT_BRACE, RIGHT_BRACE,
-	COMMA, DOT, MINUS, PLUS, SEMICOLON, SLASH, STAR,
-
-	// One or two character tokens.
-	BANG, BANG_EQUAL,
-	EQUAL, EQUAL_EQUAL,
-	GREATER, GREATER_EQUAL,
-	LESS, LESS_EQUAL,
-
-	// Literals.
-	IDENTIFIER, STRING, NUMBER,
-
-	// Keywords.
-	AND, CLASS, ELSE, FALSE, FUN, FOR, IF, NIL, OR,
-	PRINT, RETURN, SUPER, THIS, TRUE, VAR, WHILE,
-
-	ENDOFFILE
-};
-
-struct iteral
-{
-	bool boolean;
-	double val;
-    string str;
-};
-
-class Token
-{
-public:
-	TokenType type;
-	string lexeme;
-	iteral it;
-	int line;
-
-	Token(TokenType type, string lexeme, iteral it, int line);
-	string to_string();
-	void update_line(int line);
-};
-
-
 
 class scanner
 {
@@ -74,6 +29,6 @@ private:
 	void handle_number();
 	void handle_identifier();
 public:
-	scanner(string& code);
+	explicit scanner(string& code);
 	vector<Token> scan_Tokens();
 };

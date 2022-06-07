@@ -11,21 +11,19 @@ using namespace std;
 
 int main(int argc, char** argv)
 {
-	
 
-	//Lox l(argc, argv);
-
+	Lox l(argc, argv);
 
 
-    Binary_Expr exp = Binary_Expr(new Token(STAR, "*", iteral{}, 1),
+    /*Binary_Expr exp = Binary_Expr(new Token(STAR, "*", iteral{}, 1),
                            new Unary_Expr(new Token(MINUS, "-", iteral{}, 1),
                                           new Literal_Expr(new Token(NUMBER, "123", iteral{false, 123, ""}, 1))),
                            new Grouping_Expr(new Literal_Expr(new Token(NUMBER, "45.67", iteral{false, 45.67, ""}, 1))));
 
     AST_Printer p;
-    p.print(&exp);
+    p.print(&exp);*/
 
 	
-	// system("pause");
+	//system("pause");
 	return 0;
 }

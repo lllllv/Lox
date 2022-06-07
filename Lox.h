@@ -11,7 +11,7 @@ using namespace std;
 class Lox
 {
 private:
-	void run_file(string file);
+	void run_file(const string& file);
 
     [[noreturn]] void run_promt();
 

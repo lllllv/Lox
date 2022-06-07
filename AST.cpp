@@ -20,3 +20,8 @@ void Binary_Expr::accept(Visitor *v) {
 void Grouping_Expr::accept(Visitor *v) {
     v->Visit_Grouping_Expr(this);
 }
+
+/*void Expr::accept(Visitor *v) {
+    v->Visit_Expr(this);
+}*/
+
