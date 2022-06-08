@@ -179,3 +179,11 @@ void interpreter::eval() {
     im_results.pop();
     print(res);
 }
+
+void interpreter::Visit_Expression(Expression *) {
+
+}
+
+void interpreter::Visit_Print(Print *) {
+
+}

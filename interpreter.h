@@ -32,6 +32,9 @@ private:
     void Visit_Unary_Expr(Unary_Expr* u) override;
     void Visit_Binary_Expr(Binary_Expr* b) override;
 
+    void Visit_Expression(Expression*) override;
+    void Visit_Print(Print*) override;
+
     void _evaluate(Expr* exp);
     static void print(const lox_object&);
 public:

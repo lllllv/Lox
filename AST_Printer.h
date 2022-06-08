@@ -21,6 +21,9 @@ public:
     void Visit_Grouping_Expr(Grouping_Expr* g) override;
     void parenthesize(const string& name, initializer_list<Expr*> exprs);
     void print(Expr* exp);
+
+    void Visit_Expression(Expression*) override;
+    void Visit_Print(Print*) override;
 };
 
 
