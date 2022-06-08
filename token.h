@@ -47,7 +47,7 @@ public:
 
     Token(TokenType type, string lexeme, iteral it, int line);
     string to_string();
-    void update_line(int line);
+    void update_line(int l);
 };
 
 #endif //LOX_TOKEN_H

@@ -2,6 +2,7 @@
 #include "scanner.h"
 #include "parser.h"
 #include "AST_Printer.h"
+#include "interpreter.h"
 
 
 void Lox::run_file(const string& file)
@@ -17,7 +18,6 @@ void Lox::run_file(const string& file)
 	f1.seekg(ios::beg);
 	string code(len, 0);
 	f1.read(&code[0], len);
-    cout << "here" << endl;
 	run_code(code);
 
 	f1.close();
@@ -41,7 +41,6 @@ void Lox::run_file(const string& file)
 
 void Lox::run_code(string code)
 {
-    cout << code << endl;
 	scanner s(code);
 
 	vector<Token> tokens = s.scan_Tokens();
@@ -55,6 +54,11 @@ void Lox::run_code(string code)
     Expr* expr = p.parse();
     AST_Printer printer;
     printer.print(expr);
+    cout << endl;
+    cout << "*****************Interpreter*****************" << endl;
+    interpreter i(expr);
+    i.eval();
+
 }
 
 Lox::Lox(int argc, char** argv)

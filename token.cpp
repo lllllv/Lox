@@ -45,6 +45,9 @@ string Token::to_string()
         case SLASH:
             s = "SLASH";
             break;
+        case STAR:
+            s = "STAR";
+            break;
         case BANG:
             s = "BANG";
             break;
@@ -81,7 +84,7 @@ string Token::to_string()
             break;
         case NUMBER:
             s = "NUMBER";
-            s += "\titeral:";
+            s += "\tliteral:";
             s += std::to_string(this->it.val);
             break;
         case IDENTIFIER:
@@ -135,14 +138,14 @@ string Token::to_string()
     }
     stringstream ss;
     ss << this->line;
-    string line;
-    ss >> line;
+    string tmp;
+    ss >> tmp;
     s += "\tline: ";
-    s += line;
+    s += tmp;
     return s;
 }
 
-void Token::update_line(int line)
+void Token::update_line(int l)
 {
-    this->line = line;
+    this->line = l;
 }

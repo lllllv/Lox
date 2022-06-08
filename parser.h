@@ -11,7 +11,8 @@
 #include "AST.h"
 
 class parse_error : public exception {
-    const char * what () const throw ()
+
+    const char * what () const noexcept override
     {
         return "parse error!";
     }

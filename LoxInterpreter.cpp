@@ -23,7 +23,6 @@ int main(int argc, char** argv)
     AST_Printer p;
     p.print(&exp);*/
 
-	
-	//system("pause");
+
 	return 0;
 }

@@ -32,9 +32,7 @@ void AST_Printer::Visit_Grouping_Expr(Grouping_Expr *g) {
 
 void AST_Printer::print(Expr *exp) {
     exp->accept(this);
+    cout << endl;
 }
 
-/*void AST_Printer::Visit_Expr(Expr *) {
-
-}*/
 
