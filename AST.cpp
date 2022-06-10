@@ -21,7 +21,37 @@ void Grouping_Expr::accept(Visitor *v) {
     v->Visit_Grouping_Expr(this);
 }
 
-/*void Expr::accept(Visitor *v) {
-    v->Visit_Expr(this);
-}*/
+Expression::Expression(Expr *expr) : expr(expr)
+{
 
+}
+
+void Expression::accept(Visitor *v)
+{
+    v->Visit_Expression_Stmt(this);
+}
+
+Print::Print(Expr *expr) : expr(expr)
+{
+
+}
+
+void Print::accept(Visitor *v)
+{
+    v->Visit_Print_Stmt(this);
+}
+
+Var::Var(Token *name, Expr *initializer) : name(name), initializer(initializer)
+{
+
+}
+
+Variable_Expr::Variable_Expr(Token *t) : name(t)
+{
+
+}
+
+void Variable_Expr::accept(Visitor *v)
+{
+    v->Visit_Variable_Expr(this);
+}

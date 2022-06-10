@@ -9,20 +9,15 @@
 #include "AST.h"
 #include "visitor.h"
 #include "lox_object.h"
+#include "interpreter_exceptions.h"
 
 using namespace std;
 
-class interpreter_runtime_error : public runtime_error {
-public:
-    const char * what () const noexcept override
-    {
-        return "interpreter runtime error!";
-    }
-};
+
 
 class interpreter : public Visitor{
 private:
-    Expr* expr;
+    //Expr* expr;
     stack<lox_object> im_results;
     static bool is_truthy(const lox_object&);
     static bool is_equal(const lox_object&, const lox_object&);
@@ -32,15 +27,18 @@ private:
     void Visit_Unary_Expr(Unary_Expr* u) override;
     void Visit_Binary_Expr(Binary_Expr* b) override;
 
-    void Visit_Expression(Expression*) override;
-    void Visit_Print(Print*) override;
+    void Visit_Expression_Stmt(Expression*) override;
+    void Visit_Print_Stmt(Print*) override;
+    void Visit_Var_Stmt(Var*) override;
 
     void _evaluate(Expr* exp);
-    static void print(const lox_object&);
+    void _execute(Stmt* stmt);
+    static void _print_lox_object(const lox_object&);
 public:
     ~interpreter() override = default;
-    explicit interpreter(Expr* exp);
-    void eval();
+    explicit interpreter() = default;
+    void eval(Expr* exp);
+    void interpret(const vector<Stmt*>& stmts);
 };
 
 

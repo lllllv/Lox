@@ -21,7 +21,7 @@ int main(int argc, char** argv)
                            new Grouping_Expr(new Literal_Expr(new Token(NUMBER, "45.67", iteral{false, 45.67, ""}, 1))));
 
     AST_Printer p;
-    p.print(&exp);*/
+    p._print_lox_object(&exp);*/
 
 
 	return 0;

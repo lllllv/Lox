@@ -22,8 +22,9 @@ public:
     void parenthesize(const string& name, initializer_list<Expr*> exprs);
     void print(Expr* exp);
 
-    void Visit_Expression(Expression*) override;
-    void Visit_Print(Print*) override;
+    void Visit_Expression_Stmt(Expression*) override;
+    void Visit_Print_Stmt(Print*) override;
+    void Visit_Var_Stmt(Var*) override;
 };
 
 

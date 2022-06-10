@@ -35,11 +35,16 @@ void AST_Printer::print(Expr *exp) {
     cout << endl;
 }
 
-void AST_Printer::Visit_Expression(Expression *) {
+void AST_Printer::Visit_Expression_Stmt(Expression * expression) {
 
 }
 
-void AST_Printer::Visit_Print(Print *) {
+void AST_Printer::Visit_Print_Stmt(Print * print) {
+
+}
+
+void AST_Printer::Visit_Var_Stmt(Var *)
+{
 
 }
 

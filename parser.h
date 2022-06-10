@@ -9,21 +9,15 @@
 #include <exception>
 #include "token.h"
 #include "AST.h"
+#include "interpreter_exceptions.h"
 
-class parse_error : public exception {
-
-    const char * what () const noexcept override
-    {
-        return "parse error!";
-    }
-};
 
 
 class parser {
 public:
     explicit parser(vector<Token>&& t);
 
-    Expr* parse();
+    vector<Stmt*> parse();
 
 private:
     vector<Token> tokens;
@@ -36,6 +30,12 @@ private:
     Expr* factor();
     Expr* unary();
     Expr* primary();
+
+    Stmt* declaration();
+    Stmt* statement();
+    Stmt* print_stmt();
+    Stmt* expression_stmt();
+    Stmt* var_declaration();
 
 
     bool match(TokenType t);

@@ -130,20 +130,16 @@ Expr *parser::primary() {
         consume(RIGHT_PAREN, "Expect ')' after expression.");
         return new Grouping_Expr(expr);
     }
+
+    if(match(IDENTIFIER))
+        return new Variable_Expr(previous());
     
     throw report_error(*peek(), "Expect expression.");
 }
 
 
 
-Expr *parser::parse() {
-    try {
-        return expression();
-    }
-    catch(parse_error& p){
-        return nullptr;
-    }
-}
+
 
 void parser::error(const Token& t, const string& msg) {
     if(t.type == ENDOFFILE)
@@ -184,6 +180,59 @@ void parser::synchronize() {
 
         eat();
     }
+}
+
+vector<Stmt *> parser::parse()
+{
+    vector<Stmt*> res;
+    while(!is_end())
+        res.push_back(declaration());
+    return res;
+}
+
+Stmt *parser::statement()
+{
+    if(match(PRINT))
+        return print_stmt();
+    else
+        return expression_stmt();
+}
+
+Stmt *parser::print_stmt()
+{
+    Expr* value = expression();
+    consume(SEMICOLON, "Expect ';' after value.");
+    return new Print(value);
+}
+
+Stmt *parser::expression_stmt()
+{
+    Expr* value = expression();
+    consume(SEMICOLON, "Expect ';' after expression.");
+    return new Expression(value);
+}
+
+Stmt *parser::declaration()
+{
+    try {
+        if(match(VAR))
+            return var_declaration();
+        else
+            return statement();
+    } catch (parse_error& e) {
+        synchronize();
+        return nullptr;
+    }
+}
+
+Stmt *parser::var_declaration()
+{
+    Token* name = consume(IDENTIFIER, "Expect variable name.");
+    Expr* initializer = nullptr;
+    if(match(EQUAL))
+        initializer = expression();
+    consume(SEMICOLON, "Expect ';' after variable declaration.");
+    return new Var(name, initializer);
 }
 
 

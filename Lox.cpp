@@ -51,13 +51,14 @@ void Lox::run_code(string code)
     cout << endl;
     cout << "*****************Parser*****************" << endl;
     parser p(move(tokens));
-    Expr* expr = p.parse();
-    AST_Printer printer;
-    printer.print(expr);
+    //Expr* expr = p.parse();
+    //AST_Printer printer;
+    //printer.print(expr);
+    vector<Stmt*> stmts = p.parse();
     cout << endl;
     cout << "*****************Interpreter*****************" << endl;
-    interpreter i(expr);
-    i.eval();
+    interpreter i;
+    i.interpret(stmts);
 
 }
 

@@ -305,7 +305,7 @@ scanner::scanner(string& code):code(code), start(0), current(0), line(1)
 	this->keyword_table.insert(make_pair("if", Token(IF, "if", iteral{}, 0)));
 	this->keyword_table.insert(make_pair("nil", Token(NIL, "nil", iteral{}, 0)));
 	this->keyword_table.insert(make_pair("or", Token(OR, "or", iteral{}, 0)));
-	this->keyword_table.insert(make_pair("print", Token(PRINT, "print", iteral{}, 0)));
+	this->keyword_table.insert(make_pair("print", Token(PRINT, "_print_lox_object", iteral{}, 0)));
 	this->keyword_table.insert(make_pair("return", Token(RETURN, "return", iteral{}, 0)));
 	this->keyword_table.insert(make_pair("super", Token(SUPER, "super", iteral{}, 0)));
 	this->keyword_table.insert(make_pair("this", Token(THIS, "this", iteral{}, 0)));

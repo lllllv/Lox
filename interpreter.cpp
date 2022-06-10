@@ -142,13 +142,7 @@ void interpreter::Visit_Binary_Expr(Binary_Expr *b) {
     }
 }
 
-interpreter::interpreter(Expr *exp) : expr(exp) {
-
-}
-
-void interpreter::print(const lox_object& l) {
-
-
+void interpreter::_print_lox_object(const lox_object& l) {
     switch(l.type)
     {
         case NUMBER:
@@ -173,17 +167,39 @@ void interpreter::print(const lox_object& l) {
     }
 }
 
-void interpreter::eval() {
-    _evaluate(this->expr);
+void interpreter::eval(Expr* expr) {
+    _evaluate(expr);
     lox_object res = im_results.top();
     im_results.pop();
-    print(res);
+    _print_lox_object(res);
 }
 
-void interpreter::Visit_Expression(Expression *) {
+// ?
+void interpreter::Visit_Expression_Stmt(Expression * expression) {
+    _evaluate(expression->expr);
+    im_results.pop();
+}
+
+void interpreter::Visit_Print_Stmt(Print *p) {
+    _evaluate(p->expr);
+    lox_object tmp = im_results.top();
+    im_results.pop();
+    _print_lox_object(tmp);
+}
+
+void interpreter::interpret(const vector<Stmt *>& stmts)
+{
+    for(auto i : stmts)
+        _execute(i);
 
 }
 
-void interpreter::Visit_Print(Print *) {
+void interpreter::_execute(Stmt *stmt)
+{
+    stmt->accept(this);
+}
+
+void interpreter::Visit_Var_Stmt(Var *v)
+{
 
 }

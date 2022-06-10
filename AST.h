@@ -60,6 +60,13 @@ public:
     void accept(Visitor* v) override;
 };
 
+class Variable_Expr : public Expr {
+public:
+    Token* name;
+    explicit Variable_Expr(Token* t);
+    void accept(Visitor* v) override;
+};
+
 
 class Stmt : public AST_Node {
 public:
@@ -78,6 +85,14 @@ class Print : public Stmt {
 public:
     Expr* expr;
     explicit Print(Expr* expr);
+    void accept(Visitor* v) override;
+};
+
+class Var : public Stmt {
+public:
+    Token* name;
+    Expr* initializer;
+    Var(Token* name, Expr* initializer);
     void accept(Visitor* v) override;
 };
 

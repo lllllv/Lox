@@ -46,6 +46,7 @@ public:
     int line;
 
     Token(TokenType type, string lexeme, iteral it, int line);
+    Token(const Token& t) = default;
     string to_string();
     void update_line(int l);
 };
