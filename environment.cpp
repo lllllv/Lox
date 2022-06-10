@@ -12,3 +12,11 @@ void environment::define(const string &name, const lox_object &l)
     values[name] = new lox_object(l);
 }
 
+lox_object *environment::get(const Token &name)
+{
+    if(values.find(name.lexeme) != values.end())
+        return values[name.lexeme];
+
+    throw interpreter_runtime_error()
+}
+
