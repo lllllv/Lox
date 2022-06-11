@@ -17,6 +17,6 @@ lox_object *environment::get(const Token &name)
     if(values.find(name.lexeme) != values.end())
         return values[name.lexeme];
 
-    throw interpreter_runtime_error()
+    throw interpreter_runtime_error(new Token(name),  "Undefined variable '" + name.lexeme + "'.");
 }
 

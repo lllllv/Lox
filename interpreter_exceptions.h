@@ -15,6 +15,9 @@ class parse_error : public exception {
 
 class interpreter_runtime_error : public runtime_error {
 public:
+    Token* t;
+
+    interpreter_runtime_error(Token* t, const string& s) : runtime_error(s), t(t){};
     const char * what () const noexcept override
     {
         return "interpreter runtime error!";
