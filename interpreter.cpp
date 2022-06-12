@@ -201,5 +201,18 @@ void interpreter::_execute(Stmt *stmt)
 
 void interpreter::Visit_Var_Stmt(Var *v)
 {
+    lox_object val;
+    if(v->initializer != nullptr)
+    {
+        _evaluate(v->initializer);
+        val = im_results.top();
+        im_results.pop();
+    }
 
+    env.define(v->name->lexeme, val);
+}
+
+void interpreter::Visit_Variable_Expr(Variable_Expr *expr)
+{
+    im_results.push(env.get(*expr->name));
 }

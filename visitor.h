@@ -11,6 +11,7 @@ class Unary_Expr;
 class Binary_Expr;
 class Grouping_Expr;
 class Variable_Expr;
+class Assignment_Expr;
 
 class Stmt;
 class Expression;
@@ -25,6 +26,7 @@ public:
     virtual void Visit_Binary_Expr(Binary_Expr*) = 0;
     virtual void Visit_Grouping_Expr(Grouping_Expr*) = 0;
     virtual void Visit_Variable_Expr(Variable_Expr*) = 0;
+    virtual void Visit_Assignment_Expr(Assignment_Expr*) = 0;
 
     virtual void Visit_Expression_Stmt(Expression*) = 0;
     virtual void Visit_Print_Stmt(Print*) = 0;

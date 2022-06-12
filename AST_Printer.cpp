@@ -48,4 +48,14 @@ void AST_Printer::Visit_Var_Stmt(Var *)
 
 }
 
+void AST_Printer::Visit_Variable_Expr(Variable_Expr *)
+{
+
+}
+
+void AST_Printer::Visit_Assignment_Expr(Assignment_Expr *)
+{
+
+}
+
 

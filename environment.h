@@ -17,7 +17,7 @@ private:
 public:
     environment() = default;
     void define(const string& name, const lox_object& l);
-    lox_object* get(const Token& name);
+    lox_object get(const Token& name);
 };
 
 

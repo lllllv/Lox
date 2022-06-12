@@ -67,6 +67,14 @@ public:
     void accept(Visitor* v) override;
 };
 
+class Assignment : public Expr {
+public:
+    Token* name;
+    Expr* expr;
+    Assignment(Token* name, Expr* expr) : name(name), expr(expr) {};
+    void accept(Visitor* v) override;
+};
+
 
 class Stmt : public AST_Node {
 public:

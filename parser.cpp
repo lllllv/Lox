@@ -54,7 +54,7 @@ Token *parser::consume(TokenType t, const string& msg) {
 
 
 Expr* parser::expression() {
-    return equality();
+    return assignment();
 }
 
 Expr* parser::equality() {
@@ -233,6 +233,11 @@ Stmt *parser::var_declaration()
         initializer = expression();
     consume(SEMICOLON, "Expect ';' after variable declaration.");
     return new Var(name, initializer);
+}
+
+Expr *parser::assignment()
+{
+
 }
 
 

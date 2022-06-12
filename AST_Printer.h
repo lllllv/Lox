@@ -19,6 +19,8 @@ public:
     void Visit_Unary_Expr(Unary_Expr* u) override;
     void Visit_Binary_Expr(Binary_Expr* b) override;
     void Visit_Grouping_Expr(Grouping_Expr* g) override;
+    void Visit_Variable_Expr(Variable_Expr*) override;
+    void Visit_Assignment_Expr(Assignment_Expr*) override;
     void parenthesize(const string& name, initializer_list<Expr*> exprs);
     void print(Expr* exp);
 

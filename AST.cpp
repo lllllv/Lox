@@ -46,6 +46,11 @@ Var::Var(Token *name, Expr *initializer) : name(name), initializer(initializer)
 
 }
 
+void Var::accept(Visitor *v)
+{
+    v->Visit_Var_Stmt(this);
+}
+
 Variable_Expr::Variable_Expr(Token *t) : name(t)
 {
 
