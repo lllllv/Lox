@@ -6,6 +6,7 @@
 #define LOX_LOX_OBJECT_H
 
 #include <string>
+#include <iostream>
 #include "token.h"
 using namespace std;
 
@@ -22,6 +23,7 @@ public:
     explicit lox_object(string&& s);
     explicit lox_object(double num);
     explicit lox_object(bool boolean);
+    void print();
 };
 
 

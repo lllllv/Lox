@@ -32,28 +32,62 @@ void AST_Printer::Visit_Grouping_Expr(Grouping_Expr *g) {
 
 void AST_Printer::print(Expr *exp) {
     exp->accept(this);
-    cout << endl;
+    // cout << endl;
 }
 
-void AST_Printer::Visit_Expression_Stmt(Expression * expression) {
-
-}
-
-void AST_Printer::Visit_Print_Stmt(Print * print) {
+void AST_Printer::Visit_Expression_Stmt(Expression_Stmt * expression) {
 
 }
 
-void AST_Printer::Visit_Var_Stmt(Var *)
+void AST_Printer::Visit_Print_Stmt(Print_Stmt * print) {
+
+}
+
+void AST_Printer::Visit_Var_Stmt(Var_Stmt *)
 {
 
 }
 
-void AST_Printer::Visit_Variable_Expr(Variable_Expr *)
+void AST_Printer::Visit_Variable_Expr(Variable_Expr * expr)
 {
-
+    cout << expr->name->lexeme;
 }
 
-void AST_Printer::Visit_Assignment_Expr(Assignment_Expr *)
+void AST_Printer::Visit_Assignment_Expr(Assignment_Expr * expr)
+{
+    cout << "(Assignment " << expr->name->lexeme << " ";
+    print(expr->expr);
+    cout << ")";
+}
+
+void AST_Printer::print(vector<Stmt *> &stmts)
+{
+    for(auto* stmt : stmts)
+    {
+        if(typeid(*stmt) == typeid(Print_Stmt))
+        {
+            Print_Stmt* tmp = dynamic_cast<Print_Stmt*>(stmt);
+            cout << "(print ";
+            print(tmp->expr);
+            cout << " )" << endl;
+        }
+        else if(typeid(*stmt) == typeid(Var_Stmt))
+        {
+            Var_Stmt* tmp = dynamic_cast<Var_Stmt*>(stmt);
+            cout << "(_LET_ " << tmp->name->lexeme << " ";
+            print(tmp->initializer);
+            cout << ")" << endl;
+        }
+        else if(typeid(*stmt) == typeid(Expression_Stmt))
+        {
+            Expression_Stmt* tmp = dynamic_cast<Expression_Stmt*>(stmt);
+            print(tmp->expr);
+            cout << endl;
+        }
+    }
+}
+
+void AST_Printer::Visit_Block_Stmt(Block_Stmt *)
 {
 
 }

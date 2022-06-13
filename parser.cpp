@@ -194,6 +194,8 @@ Stmt *parser::statement()
 {
     if(match(PRINT))
         return print_stmt();
+    if(match(LEFT_BRACE))
+        return new Block_Stmt(block());
     else
         return expression_stmt();
 }
@@ -202,14 +204,14 @@ Stmt *parser::print_stmt()
 {
     Expr* value = expression();
     consume(SEMICOLON, "Expect ';' after value.");
-    return new Print(value);
+    return new Print_Stmt(value);
 }
 
 Stmt *parser::expression_stmt()
 {
     Expr* value = expression();
     consume(SEMICOLON, "Expect ';' after expression.");
-    return new Expression(value);
+    return new Expression_Stmt(value);
 }
 
 Stmt *parser::declaration()
@@ -232,12 +234,37 @@ Stmt *parser::var_declaration()
     if(match(EQUAL))
         initializer = expression();
     consume(SEMICOLON, "Expect ';' after variable declaration.");
-    return new Var(name, initializer);
+    return new Var_Stmt(name, initializer);
 }
 
 Expr *parser::assignment()
 {
+    Expr* expr = equality();
+    if(match(EQUAL))
+    {
+        Token* equals = previous();
+        Expr* value = assignment();
 
+        if(auto*  var_expr = dynamic_cast<Variable_Expr*>(expr))
+        {
+            auto* name = new Token(*(var_expr->name));
+            return new Assignment_Expr(name, value);
+        }
+
+        error(*equals, "Invalid assignment target.");
+    }
+
+    return expr;
+}
+
+vector<Stmt *> *parser::block()
+{
+    auto res = new vector<Stmt*>();
+    while(!check(RIGHT_BRACE) && !is_end())
+        res->push_back(declaration());
+
+    consume(RIGHT_BRACE, "Expect '}' after block.");
+    return res;
 }
 
 

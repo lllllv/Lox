@@ -14,9 +14,10 @@ class Variable_Expr;
 class Assignment_Expr;
 
 class Stmt;
-class Expression;
-class Print;
-class Var;
+class Expression_Stmt;
+class Print_Stmt;
+class Var_Stmt;
+class Block_Stmt;
 
 class Visitor {
 public:
@@ -28,9 +29,10 @@ public:
     virtual void Visit_Variable_Expr(Variable_Expr*) = 0;
     virtual void Visit_Assignment_Expr(Assignment_Expr*) = 0;
 
-    virtual void Visit_Expression_Stmt(Expression*) = 0;
-    virtual void Visit_Print_Stmt(Print*) = 0;
-    virtual void Visit_Var_Stmt(Var*) = 0;
+    virtual void Visit_Expression_Stmt(Expression_Stmt*) = 0;
+    virtual void Visit_Print_Stmt(Print_Stmt*) = 0;
+    virtual void Visit_Var_Stmt(Var_Stmt*) = 0;
+    virtual void Visit_Block_Stmt(Block_Stmt*) = 0;
 };
 
 

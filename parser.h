@@ -37,6 +37,7 @@ private:
     Stmt* print_stmt();
     Stmt* expression_stmt();
     Stmt* var_declaration();
+    vector<Stmt*>* block();
 
 
     bool match(TokenType t);

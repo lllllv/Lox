@@ -67,11 +67,11 @@ public:
     void accept(Visitor* v) override;
 };
 
-class Assignment : public Expr {
+class Assignment_Expr : public Expr {
 public:
     Token* name;
     Expr* expr;
-    Assignment(Token* name, Expr* expr) : name(name), expr(expr) {};
+    Assignment_Expr(Token* name, Expr* expr) : name(name), expr(expr) {};
     void accept(Visitor* v) override;
 };
 
@@ -82,25 +82,32 @@ public:
     ~Stmt() override = default;
 };
 
-class Expression : public Stmt {
+class Expression_Stmt : public Stmt {
 public:
     Expr* expr;
-    explicit Expression(Expr* expr);
+    explicit Expression_Stmt(Expr* expr);
     void accept(Visitor* v) override;
 };
 
-class Print : public Stmt {
+class Print_Stmt : public Stmt {
 public:
     Expr* expr;
-    explicit Print(Expr* expr);
+    explicit Print_Stmt(Expr* expr);
     void accept(Visitor* v) override;
 };
 
-class Var : public Stmt {
+class Var_Stmt : public Stmt {
 public:
     Token* name;
     Expr* initializer;
-    Var(Token* name, Expr* initializer);
+    Var_Stmt(Token* name, Expr* initializer);
+    void accept(Visitor* v) override;
+};
+
+class Block_Stmt : public Stmt {
+public:
+    vector<Stmt*>* stmts;
+    explicit Block_Stmt(vector<Stmt*>* stmts) : stmts(stmts){};
     void accept(Visitor* v) override;
 };
 

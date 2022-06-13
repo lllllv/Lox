@@ -174,22 +174,24 @@ void interpreter::eval(Expr* expr) {
     _print_lox_object(res);
 }
 
-// ?
-void interpreter::Visit_Expression_Stmt(Expression * expression) {
+// Expression_Stmt like :  "a = 2;"  no need to pop;
+// Expression_Stmt like : "1+1;" need to pop; ?????
+void interpreter::Visit_Expression_Stmt(Expression_Stmt * expression) {
     _evaluate(expression->expr);
-    im_results.pop();
+    //im_results.top().print();
 }
 
-void interpreter::Visit_Print_Stmt(Print *p) {
+void interpreter::Visit_Print_Stmt(Print_Stmt *p) {
     _evaluate(p->expr);
     lox_object tmp = im_results.top();
     im_results.pop();
     _print_lox_object(tmp);
+    cout << endl;
 }
 
 void interpreter::interpret(const vector<Stmt *>& stmts)
 {
-    for(auto i : stmts)
+    for(auto* i : stmts)
         _execute(i);
 
 }
@@ -199,7 +201,7 @@ void interpreter::_execute(Stmt *stmt)
     stmt->accept(this);
 }
 
-void interpreter::Visit_Var_Stmt(Var *v)
+void interpreter::Visit_Var_Stmt(Var_Stmt *v)
 {
     lox_object val;
     if(v->initializer != nullptr)
@@ -208,11 +210,45 @@ void interpreter::Visit_Var_Stmt(Var *v)
         val = im_results.top();
         im_results.pop();
     }
-
-    env.define(v->name->lexeme, val);
+    //val.print();
+    env->define(v->name->lexeme, val);
 }
 
 void interpreter::Visit_Variable_Expr(Variable_Expr *expr)
 {
-    im_results.push(env.get(*expr->name));
+    im_results.push(env->get(*expr->name));
+}
+
+void interpreter::Visit_Assignment_Expr(Assignment_Expr *expr)
+{
+    _evaluate(expr->expr);
+    lox_object l = im_results.top();
+    im_results.pop();
+    env->assign(*expr->name, l);
+}
+
+void interpreter::Visit_Block_Stmt(Block_Stmt * stmt)
+{
+    auto new_env = new environment();
+    _execute_Block(stmt->stmts, new_env);
+    delete new_env;
+}
+
+void interpreter::_execute_Block(vector<Stmt*>* stmts, environment* new_env)
+{
+    environment* previous = this->env;
+    try {
+        this->env = new_env;
+        for(auto* stmt : *stmts)
+            _execute(stmt);
+    } catch(interpreter_runtime_error& e) {
+
+    }
+
+    this->env = previous;
+}
+
+interpreter::interpreter()
+{
+    this->env = new environment();
 }

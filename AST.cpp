@@ -21,32 +21,32 @@ void Grouping_Expr::accept(Visitor *v) {
     v->Visit_Grouping_Expr(this);
 }
 
-Expression::Expression(Expr *expr) : expr(expr)
+Expression_Stmt::Expression_Stmt(Expr *expr) : expr(expr)
 {
 
 }
 
-void Expression::accept(Visitor *v)
+void Expression_Stmt::accept(Visitor *v)
 {
     v->Visit_Expression_Stmt(this);
 }
 
-Print::Print(Expr *expr) : expr(expr)
+Print_Stmt::Print_Stmt(Expr *expr) : expr(expr)
 {
 
 }
 
-void Print::accept(Visitor *v)
+void Print_Stmt::accept(Visitor *v)
 {
     v->Visit_Print_Stmt(this);
 }
 
-Var::Var(Token *name, Expr *initializer) : name(name), initializer(initializer)
+Var_Stmt::Var_Stmt(Token *name, Expr *initializer) : name(name), initializer(initializer)
 {
 
 }
 
-void Var::accept(Visitor *v)
+void Var_Stmt::accept(Visitor *v)
 {
     v->Visit_Var_Stmt(this);
 }
@@ -59,4 +59,15 @@ Variable_Expr::Variable_Expr(Token *t) : name(t)
 void Variable_Expr::accept(Visitor *v)
 {
     v->Visit_Variable_Expr(this);
+}
+
+
+void Assignment_Expr::accept(Visitor *v)
+{
+    v->Visit_Assignment_Expr(this);
+}
+
+void Block_Stmt::accept(Visitor *v)
+{
+    v->Visit_Block_Stmt(this);
 }

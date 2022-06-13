@@ -23,10 +23,12 @@ public:
     void Visit_Assignment_Expr(Assignment_Expr*) override;
     void parenthesize(const string& name, initializer_list<Expr*> exprs);
     void print(Expr* exp);
+    void print(vector<Stmt*>& stmts);
 
-    void Visit_Expression_Stmt(Expression*) override;
-    void Visit_Print_Stmt(Print*) override;
-    void Visit_Var_Stmt(Var*) override;
+    void Visit_Expression_Stmt(Expression_Stmt*) override;
+    void Visit_Print_Stmt(Print_Stmt*) override;
+    void Visit_Var_Stmt(Var_Stmt*) override;
+    void Visit_Block_Stmt(Block_Stmt*) override;
 };
 
 
