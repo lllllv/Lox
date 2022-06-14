@@ -229,7 +229,7 @@ void interpreter::Visit_Assignment_Expr(Assignment_Expr *expr)
 
 void interpreter::Visit_Block_Stmt(Block_Stmt * stmt)
 {
-    auto new_env = new environment();
+    auto new_env = new environment(this->env);
     _execute_Block(stmt->stmts, new_env);
     delete new_env;
 }

@@ -15,7 +15,7 @@ void environment::define(const string &name, const lox_object &l)
 lox_object environment::get(const Token &name)
 {
     if(values.find(name.lexeme) != values.end())
-        return lox_object(values[name.lexeme]);
+        return {*values[name.lexeme]};
     if(enclosing != nullptr)
         return enclosing->get(name);
 
