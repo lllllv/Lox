@@ -75,6 +75,14 @@ public:
     void accept(Visitor* v) override;
 };
 
+class Logical_Expr : public Expr {
+public:
+    Expr* left, *right;
+    Token* op;
+    Logical_Expr(Expr* left, Token* op, Expr* right) : left(left), op(op), right(right){};
+    void accept(Visitor* v) override;
+};
+
 
 class Stmt : public AST_Node {
 public:
@@ -108,6 +116,14 @@ class Block_Stmt : public Stmt {
 public:
     vector<Stmt*>* stmts;
     explicit Block_Stmt(vector<Stmt*>* stmts) : stmts(stmts){};
+    void accept(Visitor* v) override;
+};
+
+class If_Stmt : public Stmt {
+public:
+    Expr* condition;
+    Stmt* then_branch, * else_branch;
+    If_Stmt(Expr* c, Stmt* t, Stmt* e) : condition(c), then_branch(t), else_branch(e){};
     void accept(Visitor* v) override;
 };
 

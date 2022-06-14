@@ -30,11 +30,14 @@ private:
     void Visit_Binary_Expr(Binary_Expr* b) override;
     void Visit_Variable_Expr(Variable_Expr*) override;
     void Visit_Assignment_Expr(Assignment_Expr*) override;
+    void Visit_Logical_Expr(Logical_Expr*) override;
 
     void Visit_Expression_Stmt(Expression_Stmt*) override;
     void Visit_Print_Stmt(Print_Stmt*) override;
     void Visit_Var_Stmt(Var_Stmt*) override;
     void Visit_Block_Stmt(Block_Stmt*) override;
+    void Visit_If_Stmt(If_Stmt*) override;
+
 
     void _evaluate(Expr* exp);
     void _execute(Stmt* stmt);

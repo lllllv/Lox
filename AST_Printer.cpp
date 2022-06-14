@@ -92,4 +92,15 @@ void AST_Printer::Visit_Block_Stmt(Block_Stmt *)
 
 }
 
+void AST_Printer::Visit_If_Stmt(If_Stmt *)
+{
+
+}
+
+void AST_Printer::Visit_Logical_Expr(Logical_Expr *)
+{
+
+}
+
+
 

@@ -21,6 +21,10 @@ public:
     void Visit_Grouping_Expr(Grouping_Expr* g) override;
     void Visit_Variable_Expr(Variable_Expr*) override;
     void Visit_Assignment_Expr(Assignment_Expr*) override;
+    void Visit_Logical_Expr(Logical_Expr*) override;
+
+
+
     void parenthesize(const string& name, initializer_list<Expr*> exprs);
     void print(Expr* exp);
     void print(vector<Stmt*>& stmts);
@@ -29,6 +33,7 @@ public:
     void Visit_Print_Stmt(Print_Stmt*) override;
     void Visit_Var_Stmt(Var_Stmt*) override;
     void Visit_Block_Stmt(Block_Stmt*) override;
+    void Visit_If_Stmt(If_Stmt*) override;
 };
 
 

@@ -71,3 +71,13 @@ void Block_Stmt::accept(Visitor *v)
 {
     v->Visit_Block_Stmt(this);
 }
+
+void If_Stmt::accept(Visitor *v)
+{
+    v->Visit_If_Stmt(this);
+}
+
+void Logical_Expr::accept(Visitor *v)
+{
+    v->Visit_Logical_Expr(this);
+}

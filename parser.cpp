@@ -196,8 +196,11 @@ Stmt *parser::statement()
         return print_stmt();
     if(match(LEFT_BRACE))
         return new Block_Stmt(block());
-    else
-        return expression_stmt();
+    if(match(IF))
+        return if_stmt();
+
+
+    return expression_stmt();
 }
 
 Stmt *parser::print_stmt()
@@ -239,7 +242,7 @@ Stmt *parser::var_declaration()
 
 Expr *parser::assignment()
 {
-    Expr* expr = equality();
+    Expr* expr = logical_or();
     if(match(EQUAL))
     {
         Token* equals = previous();
@@ -265,6 +268,47 @@ vector<Stmt *> *parser::block()
 
     consume(RIGHT_BRACE, "Expect '}' after block.");
     return res;
+}
+
+Stmt *parser::if_stmt()
+{
+    consume(LEFT_PAREN, "Expect '(' after 'if'.");
+    Expr* condition = expression();
+    consume(RIGHT_PAREN, "Expect ')' after if condition.");
+
+    Stmt* then_branch = statement();
+    Stmt* else_branch = nullptr;
+
+    if(match(ELSE))
+        else_branch = statement();
+    return new If_Stmt(condition, then_branch, else_branch);
+}
+
+Expr *parser::logical_or()
+{
+    Expr* expr = logical_and();
+    while(match(OR))
+    {
+        Token* op = previous();
+        Expr* right = logical_and();
+        expr = new Logical_Expr(expr, op, right);
+    }
+
+    return expr;
+}
+
+Expr *parser::logical_and()
+{
+    Expr* expr = equality();
+
+    while(match(AND))
+    {
+        Token* op = previous();
+        Expr* right = equality();
+        expr = new Logical_Expr(expr, op, right);
+    }
+
+    return expr;
 }
 
 

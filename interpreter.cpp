@@ -219,12 +219,14 @@ void interpreter::Visit_Variable_Expr(Variable_Expr *expr)
     im_results.push(env->get(*expr->name));
 }
 
+//  evaluate an Assignment_Expr produces
+//  the evaluation result of the corresponding expression
 void interpreter::Visit_Assignment_Expr(Assignment_Expr *expr)
 {
     _evaluate(expr->expr);
     lox_object l = im_results.top();
-    im_results.pop();
     env->assign(*expr->name, l);
+
 }
 
 void interpreter::Visit_Block_Stmt(Block_Stmt * stmt)
@@ -253,4 +255,41 @@ interpreter::interpreter()
     this->env = new environment();
 }
 
-// a test
+void interpreter::Visit_If_Stmt(If_Stmt * if_stmt)
+{
+    _evaluate(if_stmt->condition);
+    lox_object tmp = im_results.top();
+    im_results.pop();
+
+    if(is_truthy(tmp))
+        _execute(if_stmt->then_branch);
+    else if(if_stmt->else_branch != nullptr)
+        _execute(if_stmt->else_branch);
+}
+
+void interpreter::Visit_Logical_Expr(Logical_Expr * expr)
+{
+    _evaluate(expr->left);
+    lox_object tmp_l = im_results.top();
+    im_results.pop();
+
+    if(expr->op->type == OR)
+    {
+        if(is_truthy(tmp_l))
+        {
+            im_results.push(tmp_l);
+            return;
+        }
+
+    } else
+    {
+        if(!is_truthy(tmp_l))
+        {
+            im_results.push(tmp_l);
+            return;
+        }
+    }
+
+    _evaluate(expr->right);
+}
+

@@ -31,6 +31,8 @@ private:
     Expr* factor();
     Expr* unary();
     Expr* primary();
+    Expr* logical_or();
+    Expr* logical_and();
 
     Stmt* declaration();
     Stmt* statement();
@@ -38,6 +40,7 @@ private:
     Stmt* expression_stmt();
     Stmt* var_declaration();
     vector<Stmt*>* block();
+    Stmt* if_stmt();
 
 
     bool match(TokenType t);
