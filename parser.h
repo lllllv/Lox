@@ -33,6 +33,8 @@ private:
     Expr* primary();
     Expr* logical_or();
     Expr* logical_and();
+    Expr* call();
+    Expr* finish_call(Expr* callee);
 
     Stmt* declaration();
     Stmt* statement();
@@ -41,6 +43,9 @@ private:
     Stmt* var_declaration();
     vector<Stmt*>* block();
     Stmt* if_stmt();
+    Stmt* while_stmt();
+    Stmt* for_stmt();
+    Function_Stmt* function(const string&);
 
 
     bool match(TokenType t);

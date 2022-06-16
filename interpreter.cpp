@@ -257,11 +257,11 @@ interpreter::interpreter()
 
 void interpreter::Visit_If_Stmt(If_Stmt * if_stmt)
 {
-    _evaluate(if_stmt->condition);
+    /*_evaluate(if_stmt->condition);
     lox_object tmp = im_results.top();
-    im_results.pop();
+    im_results.pop();*/
 
-    if(is_truthy(tmp))
+    if(_evaluate_cond(if_stmt->condition))
         _execute(if_stmt->then_branch);
     else if(if_stmt->else_branch != nullptr)
         _execute(if_stmt->else_branch);
@@ -291,5 +291,24 @@ void interpreter::Visit_Logical_Expr(Logical_Expr * expr)
     }
 
     _evaluate(expr->right);
+}
+
+void interpreter::Visit_While_Stmt(While_Stmt *stmt)
+{
+    while(_evaluate_cond(stmt->condition))
+        _execute(stmt->body);
+}
+
+bool interpreter::_evaluate_cond(Expr *expr)
+{
+    _evaluate(expr);
+    lox_object tmp = im_results.top();
+    im_results.pop();
+    return is_truthy(tmp);
+}
+
+void interpreter::Visit_Call_Expr(Call_Expr * expr)
+{
+
 }
 

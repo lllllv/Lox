@@ -114,8 +114,8 @@ Expr *parser::unary() {
         Expr* operand = unary();
         return new Unary_Expr(op, operand);
     }
-    else
-        return primary();
+
+    return call();
 }
 
 Expr *parser::primary() {
@@ -198,8 +198,10 @@ Stmt *parser::statement()
         return new Block_Stmt(block());
     if(match(IF))
         return if_stmt();
-
-
+    if(match(WHILE))
+        return while_stmt();
+    if(match(FOR))
+        return for_stmt();
     return expression_stmt();
 }
 
@@ -222,8 +224,9 @@ Stmt *parser::declaration()
     try {
         if(match(VAR))
             return var_declaration();
-        else
-            return statement();
+        if(match(FUN))
+            return function("function");
+        return statement();
     } catch (parse_error& e) {
         synchronize();
         return nullptr;
@@ -309,6 +312,112 @@ Expr *parser::logical_and()
     }
 
     return expr;
+}
+
+Stmt *parser::while_stmt()
+{
+    consume(LEFT_PAREN, "Expect '(' after 'while'.");
+    Expr* condition = expression();
+    consume(RIGHT_PAREN, "Expect ')' after condition.");
+    Stmt* body = statement();
+    return new While_Stmt(condition, body);
+}
+
+Stmt *parser::for_stmt()
+{
+    consume(LEFT_PAREN, "Expect '(' after 'for'.");
+
+    Stmt* initializer = nullptr;
+    if(match(SEMICOLON))
+        initializer = nullptr;
+    else if(match(VAR))
+        initializer = var_declaration();
+    else
+        initializer = expression_stmt();
+
+    Expr* condition = nullptr;
+    if(!check(SEMICOLON))
+        condition = expression();
+    consume(SEMICOLON, "Expect ';' after loop condition.");
+
+    Expr* increment = nullptr;
+    if(!check(RIGHT_PAREN))
+        increment = expression();
+    consume(RIGHT_PAREN, "Expect ')' after for clauses.");
+
+    Stmt* body = statement();
+
+    if(increment != nullptr)
+    {
+        auto* tmp = new vector<Stmt*>();
+        tmp->push_back(body);
+        tmp->push_back(new Expression_Stmt(increment));
+        body = new Block_Stmt(tmp);
+    }
+    if(condition == nullptr)
+        condition = new Literal_Expr(new Token(TRUE, "true", {}, 0));
+    body = new While_Stmt(condition, body);
+    if(initializer != nullptr)
+    {
+        auto* tmp = new vector<Stmt*>();
+        tmp->push_back(initializer);
+        tmp->push_back(body);
+        body = new Block_Stmt(tmp);
+    }
+
+    return body;
+}
+
+Expr *parser::call()
+{
+    Expr* expr = primary();
+
+    while(true)
+    {
+        if(match(LEFT_PAREN))
+            expr = finish_call(expr);
+        else
+            break;
+    }
+
+    return expr;
+}
+
+Expr *parser::finish_call(Expr* callee)
+{
+    auto* arguments = new vector<Expr*>();
+    if(!check(RIGHT_PAREN))
+    {
+        do
+        {
+            if(arguments->size() >= 255)
+                error(*peek(), "Can't have more than 255 arguments.");;
+            arguments->push_back(expression());
+        } while(match(COMMA));
+    }
+    Token* paren = consume(RIGHT_PAREN,"Expect ')' after arguments.");
+    return new Call_Expr(callee, paren, arguments);
+}
+
+Function_Stmt *parser::function(const string& kind)
+{
+    Token* name = consume(IDENTIFIER, "Expect " + kind + " name.");
+    consume(LEFT_PAREN, "Expect '(' after " + kind + " name.");
+    auto* parameters = new vector<Token*>();
+    if(!check(RIGHT_PAREN))
+    {
+        do {
+            if (parameters->size() >= 255)
+                error(*peek(), "Can't have more than 255 parameters.");
+            parameters->push_back(consume(IDENTIFIER, "Expect parameter name."));
+        } while(match(COMMA));
+    }
+    consume(RIGHT_PAREN, "Expect ')' after parameters.");
+
+    consume(LEFT_BRACE, "Expect '{' before " + kind + " body.");
+
+    auto body = block();
+    return new Function_Stmt(name, parameters, body);
 }
 
 

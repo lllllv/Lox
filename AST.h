@@ -83,6 +83,15 @@ public:
     void accept(Visitor* v) override;
 };
 
+class Call_Expr : public Expr {
+public:
+    Expr* callee;
+    Token* paren;
+    vector<Expr*>* arguments;
+    Call_Expr(Expr* callee, Token* paren, vector<Expr*>* arguments) : callee(callee), paren(paren), arguments(arguments) {};
+    void accept(Visitor* v) override;
+};
+
 
 class Stmt : public AST_Node {
 public:
@@ -126,5 +135,24 @@ public:
     If_Stmt(Expr* c, Stmt* t, Stmt* e) : condition(c), then_branch(t), else_branch(e){};
     void accept(Visitor* v) override;
 };
+
+class While_Stmt : public Stmt {
+public:
+    Expr* condition;
+    Stmt* body;
+    While_Stmt(Expr* condition, Stmt* body) : condition(condition), body(body) {};
+    void accept(Visitor* v) override;
+};
+
+class Function_Stmt : public Stmt {
+public:
+    Token* name;
+    vector<Token*>* params;
+    vector<Stmt*>* body;
+    Function_Stmt(Token* name, vector<Token*>* params, vector<Stmt*>* body) : name(name), params(params), body(body) {};
+    void accept(Visitor* v) override;
+};
+
+
 
 #endif //LOX_AST_H

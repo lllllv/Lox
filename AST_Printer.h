@@ -22,6 +22,7 @@ public:
     void Visit_Variable_Expr(Variable_Expr*) override;
     void Visit_Assignment_Expr(Assignment_Expr*) override;
     void Visit_Logical_Expr(Logical_Expr*) override;
+    void Visit_Call_Expr(Call_Expr*) override;
 
 
 
@@ -34,6 +35,8 @@ public:
     void Visit_Var_Stmt(Var_Stmt*) override;
     void Visit_Block_Stmt(Block_Stmt*) override;
     void Visit_If_Stmt(If_Stmt*) override;
+    void Visit_While_Stmt(While_Stmt*) override;
+    void Visit_Function_Stmt(Function_Stmt*) override;
 };
 
 

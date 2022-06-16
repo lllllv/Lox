@@ -31,7 +31,8 @@ void AST_Printer::Visit_Grouping_Expr(Grouping_Expr *g) {
 }
 
 void AST_Printer::print(Expr *exp) {
-    exp->accept(this);
+    if(exp != nullptr)
+        exp->accept(this);
     // cout << endl;
 }
 
@@ -98,6 +99,21 @@ void AST_Printer::Visit_If_Stmt(If_Stmt *)
 }
 
 void AST_Printer::Visit_Logical_Expr(Logical_Expr *)
+{
+
+}
+
+void AST_Printer::Visit_While_Stmt(While_Stmt *)
+{
+
+}
+
+void AST_Printer::Visit_Call_Expr(Call_Expr *)
+{
+
+}
+
+void AST_Printer::Visit_Function_Stmt(Function_Stmt *)
 {
 
 }

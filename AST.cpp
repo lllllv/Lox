@@ -81,3 +81,18 @@ void Logical_Expr::accept(Visitor *v)
 {
     v->Visit_Logical_Expr(this);
 }
+
+void While_Stmt::accept(Visitor *v)
+{
+    v->Visit_While_Stmt(this);
+}
+
+void Call_Expr::accept(Visitor *v)
+{
+    v->Visit_Call_Expr(this);
+}
+
+void Function_Stmt::accept(Visitor *v)
+{
+    v->Visit_Function_Stmt(this);
+}
