@@ -21,7 +21,7 @@ class interpreter : public Visitor{
 private:
     //Expr* expr;
     environment* env;
-    stack<lox_object> im_results;
+    stack<lox_object*> im_results;
     static bool is_truthy(const lox_object&);
     static bool is_equal(const lox_object&, const lox_object&);
 
@@ -40,6 +40,7 @@ private:
     void Visit_Block_Stmt(Block_Stmt*) override;
     void Visit_If_Stmt(If_Stmt*) override;
     void Visit_While_Stmt(While_Stmt*) override;
+    void Visit_Function_Stmt(Function_Stmt*) override;
 
 
     void _evaluate(Expr* exp);

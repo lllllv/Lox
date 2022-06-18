@@ -10,19 +10,19 @@ void interpreter::Visit_Literal_Expr(Literal_Expr *l) {
     switch(l->t->type)
     {
         case NUMBER:
-            this->im_results.push(lox_object(l->t->it.val));
+            this->im_results.push(new lox_object(l->t->it.val));
             break;
         case STRING:
-            this->im_results.push(lox_object(l->t->it.str));
+            this->im_results.push(new lox_object(l->t->it.str));
             break;
         case NIL:
-            this->im_results.push(lox_object());
+            this->im_results.push(new lox_object());
             break;
         case TRUE:
-            this->im_results.push(lox_object(true));
+            this->im_results.push(new lox_object(true));
             break;
         case FALSE:
-            this->im_results.push(lox_object(false));
+            this->im_results.push(new lox_object(false));
             break;
         default:
             cout << "Unexpected Literal value!" << endl;
@@ -45,17 +45,17 @@ void interpreter::Visit_Unary_Expr(Unary_Expr *u) {
     {
         case MINUS:
         {
-            lox_object tmp = im_results.top();
+            lox_object* tmp = im_results.top();
             im_results.pop();
-            tmp.num = -tmp.num;
+            tmp->num = -tmp->num;
             im_results.push(tmp);
             break;
         }
         case BANG:
         {
-            lox_object tmp = im_results.top();
+            lox_object* tmp = im_results.top();
             im_results.pop();
-            im_results.push(lox_object(is_truthy(tmp)));
+            im_results.push(new lox_object(is_truthy(*tmp)));
             break;
         }
         default:
@@ -95,48 +95,48 @@ void interpreter::Visit_Binary_Expr(Binary_Expr *b) {
     _evaluate(b->lhs);
     _evaluate(b->rhs);
 
-    lox_object rhs = im_results.top();
+    lox_object* rhs = im_results.top();
     im_results.pop();
-    lox_object lhs = im_results.top();
+    lox_object* lhs = im_results.top();
     im_results.pop();
 
     switch(b->op->type)
     {
         case PLUS:
-            if(lhs.type == NUMBER && rhs.type == NUMBER)
-                im_results.push(lox_object((double)(lhs.num + rhs.num)));
-            if(lhs.type == STRING && rhs.type == STRING)
-                im_results.push(lox_object(lhs.str + rhs.str));
+            if(lhs->type == NUMBER && rhs->type == NUMBER)
+                im_results.push(new lox_object((double)(lhs->num + rhs->num)));
+            if(lhs->type == STRING && rhs->type == STRING)
+                im_results.push(new lox_object(lhs->str + rhs->str));
             break;
         case MINUS:
-            im_results.push(lox_object((double)(lhs.num - rhs.num)));
+            im_results.push(new lox_object((double)(lhs->num - rhs->num)));
             break;
         case STAR:
-            im_results.push(lox_object((double)(lhs.num * rhs.num)));
+            im_results.push(new lox_object((double)(lhs->num * rhs->num)));
             break;
         case SLASH:
-            im_results.push(lox_object((double)(lhs.num / rhs.num)));
+            im_results.push(new lox_object((double)(lhs->num / rhs->num)));
             break;
 
 
         case GREATER:
-            im_results.push(lox_object(lhs.num > rhs.num));
+            im_results.push(new lox_object(lhs->num > rhs->num));
             break;
         case GREATER_EQUAL:
-            im_results.push(lox_object(lhs.num >= rhs.num));
+            im_results.push(new lox_object(lhs->num >= rhs->num));
             break;
         case LESS:
-            im_results.push(lox_object(lhs.num < rhs.num));
+            im_results.push(new lox_object(lhs->num < rhs->num));
             break;
         case LESS_EQUAL:
-            im_results.push(lox_object(lhs.num <= rhs.num));
+            im_results.push(new lox_object(lhs->num <= rhs->num));
             break;
 
         case EQUAL_EQUAL:
-            im_results.push(lox_object(is_equal(lhs, rhs)));
+            im_results.push(new lox_object(is_equal(*lhs, *rhs)));
             break;
         case BANG_EQUAL:
-            im_results.push(lox_object(!is_equal(lhs, rhs)));
+            im_results.push(new lox_object(!is_equal(*lhs, *rhs)));
             break;
 
     }
@@ -169,9 +169,9 @@ void interpreter::_print_lox_object(const lox_object& l) {
 
 void interpreter::eval(Expr* expr) {
     _evaluate(expr);
-    lox_object res = im_results.top();
+    lox_object* res = im_results.top();
     im_results.pop();
-    _print_lox_object(res);
+    _print_lox_object(*res);
 }
 
 // Expression_Stmt like :  "a = 2;"  no need to pop;
@@ -183,9 +183,9 @@ void interpreter::Visit_Expression_Stmt(Expression_Stmt * expression) {
 
 void interpreter::Visit_Print_Stmt(Print_Stmt *p) {
     _evaluate(p->expr);
-    lox_object tmp = im_results.top();
+    lox_object* tmp = im_results.top();
     im_results.pop();
-    _print_lox_object(tmp);
+    _print_lox_object(*tmp);
     cout << endl;
 }
 
@@ -203,7 +203,7 @@ void interpreter::_execute(Stmt *stmt)
 
 void interpreter::Visit_Var_Stmt(Var_Stmt *v)
 {
-    lox_object val;
+    auto* val = new lox_object();
     if(v->initializer != nullptr)
     {
         _evaluate(v->initializer);
@@ -211,7 +211,7 @@ void interpreter::Visit_Var_Stmt(Var_Stmt *v)
         im_results.pop();
     }
     //val.print();
-    env->define(v->name->lexeme, val);
+    env->define(v->name->lexeme, *val);
 }
 
 void interpreter::Visit_Variable_Expr(Variable_Expr *expr)
@@ -224,8 +224,8 @@ void interpreter::Visit_Variable_Expr(Variable_Expr *expr)
 void interpreter::Visit_Assignment_Expr(Assignment_Expr *expr)
 {
     _evaluate(expr->expr);
-    lox_object l = im_results.top();
-    env->assign(*expr->name, l);
+    lox_object* l = im_results.top();
+    env->assign(*expr->name, *l);
 
 }
 
@@ -270,12 +270,12 @@ void interpreter::Visit_If_Stmt(If_Stmt * if_stmt)
 void interpreter::Visit_Logical_Expr(Logical_Expr * expr)
 {
     _evaluate(expr->left);
-    lox_object tmp_l = im_results.top();
+    lox_object* tmp_l = im_results.top();
     im_results.pop();
 
     if(expr->op->type == OR)
     {
-        if(is_truthy(tmp_l))
+        if(is_truthy(*tmp_l))
         {
             im_results.push(tmp_l);
             return;
@@ -283,7 +283,7 @@ void interpreter::Visit_Logical_Expr(Logical_Expr * expr)
 
     } else
     {
-        if(!is_truthy(tmp_l))
+        if(!is_truthy(*tmp_l))
         {
             im_results.push(tmp_l);
             return;
@@ -302,16 +302,21 @@ void interpreter::Visit_While_Stmt(While_Stmt *stmt)
 bool interpreter::_evaluate_cond(Expr *expr)
 {
     _evaluate(expr);
-    lox_object tmp = im_results.top();
+    lox_object* tmp = im_results.top();
     im_results.pop();
-    return is_truthy(tmp);
+    return is_truthy(*tmp);
 }
 
 void interpreter::Visit_Call_Expr(Call_Expr * expr)
 {
     _evaluate(expr);
-    lox_object callee = im_results.top();
+    lox_object* callee = im_results.top();
     im_results.pop();
-    im_results.push(lox_callable());
+    im_results.push(new lox_callable());
+}
+
+void interpreter::Visit_Function_Stmt(Function_Stmt *)
+{
+
 }
 
