@@ -309,6 +309,9 @@ bool interpreter::_evaluate_cond(Expr *expr)
 
 void interpreter::Visit_Call_Expr(Call_Expr * expr)
 {
-
+    _evaluate(expr);
+    lox_object callee = im_results.top();
+    im_results.pop();
+    im_results.push(lox_callable());
 }
 

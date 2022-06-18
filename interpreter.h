@@ -9,6 +9,7 @@
 #include "AST.h"
 #include "visitor.h"
 #include "lox_object.h"
+#include "lox_callable.h"
 #include "interpreter_exceptions.h"
 #include "environment.h"
 
