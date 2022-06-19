@@ -142,36 +142,44 @@ void interpreter::Visit_Binary_Expr(Binary_Expr *b) {
     }
 }
 
-void interpreter::_print_lox_object(const lox_object& l) {
-    switch(l.type)
+void interpreter::_print_lox_object(lox_object* l) {
+    if(auto* tmp = dynamic_cast<lox_callable*>(l))
+        cout << tmp->to_string();
+    else
     {
-        case NUMBER:
-            cout << l.num;
-            break;
-        case STRING:
-            cout << l.str;
-            break;
-        case NIL:
-            cout << "nil";
-            break;
-        case TRUE:
-            cout << "true";
-            break;
-        case FALSE:
-            cout << "false";
-            break;
+        switch(l->type)
+        {
+            case NUMBER:
+                cout << l->num;
+                break;
+            case STRING:
+                cout << l->str;
+                break;
+            case NIL:
+                cout << "nil";
+                break;
+            case TRUE:
+                cout << "true";
+                break;
+            case FALSE:
+                cout << "false";
+                break;
 
-        default:
-            cout << "Unknown result!";
-            break;
+            default:
+                cout << "Unknown result!";
+                break;
+        }
     }
+
+
 }
 
 void interpreter::eval(Expr* expr) {
     _evaluate(expr);
     lox_object* res = im_results.top();
     im_results.pop();
-    _print_lox_object(*res);
+    _print_lox_object(res);
+    delete res;
 }
 
 // Expression_Stmt like :  "a = 2;"  no need to pop;
@@ -185,7 +193,8 @@ void interpreter::Visit_Print_Stmt(Print_Stmt *p) {
     _evaluate(p->expr);
     lox_object* tmp = im_results.top();
     im_results.pop();
-    _print_lox_object(*tmp);
+    _print_lox_object(tmp);
+    delete tmp;
     cout << endl;
 }
 
@@ -211,7 +220,7 @@ void interpreter::Visit_Var_Stmt(Var_Stmt *v)
         im_results.pop();
     }
     //val.print();
-    env->define(v->name->lexeme, *val);
+    env->define(v->name->lexeme, val);
 }
 
 void interpreter::Visit_Variable_Expr(Variable_Expr *expr)
@@ -225,7 +234,7 @@ void interpreter::Visit_Assignment_Expr(Assignment_Expr *expr)
 {
     _evaluate(expr->expr);
     lox_object* l = im_results.top();
-    env->assign(*expr->name, *l);
+    env->assign(*expr->name, l);
 
 }
 
@@ -252,7 +261,9 @@ void interpreter::_execute_Block(vector<Stmt*>* stmts, environment* new_env)
 
 interpreter::interpreter()
 {
-    this->env = new environment();
+    this->globals = new environment();
+    this->globals->define("clock", new class clock());
+    this->env = globals;
 }
 
 void interpreter::Visit_If_Stmt(If_Stmt * if_stmt)
@@ -312,11 +323,31 @@ void interpreter::Visit_Call_Expr(Call_Expr * expr)
     _evaluate(expr);
     lox_object* callee = im_results.top();
     im_results.pop();
-    im_results.push(new lox_callable());
+    auto* arguments = new vector<lox_object*>();
+    for(auto* argument : *expr->arguments)
+    {
+        _evaluate(argument);
+        arguments->push_back(im_results.top());
+        im_results.pop();
+    }
+
+    if(auto* function = dynamic_cast<lox_callable*>(callee))
+    {
+        if(function->arity() == arguments->size())
+            im_results.push(function->call(*this, *arguments));
+        else
+            throw  interpreter_runtime_error(expr->paren, "Expected " +
+                                               to_string(function->arity()) + " arguments but got " +
+                                               to_string(arguments->size()) + ".");
+    }
+    else
+        throw interpreter_runtime_error(expr->paren,
+                               "Can only call functions and classes.");
 }
 
-void interpreter::Visit_Function_Stmt(Function_Stmt *)
+void interpreter::Visit_Function_Stmt(Function_Stmt *stmt)
 {
-
+    auto* fun = new lox_function(stmt);
+    env->define(stmt->name->lexeme, fun);
 }
 

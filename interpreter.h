@@ -12,6 +12,7 @@
 #include "lox_callable.h"
 #include "interpreter_exceptions.h"
 #include "environment.h"
+#include "native_functions.h"
 
 using namespace std;
 
@@ -19,8 +20,7 @@ using namespace std;
 
 class interpreter : public Visitor{
 private:
-    //Expr* expr;
-    environment* env;
+
     stack<lox_object*> im_results;
     static bool is_truthy(const lox_object&);
     static bool is_equal(const lox_object&, const lox_object&);
@@ -42,13 +42,14 @@ private:
     void Visit_While_Stmt(While_Stmt*) override;
     void Visit_Function_Stmt(Function_Stmt*) override;
 
-
+public:
     void _evaluate(Expr* exp);
     bool _evaluate_cond(Expr* expr);
     void _execute(Stmt* stmt);
     void _execute_Block(vector<Stmt*>* stmts, environment* new_env);
-    static void _print_lox_object(const lox_object&);
-public:
+    static void _print_lox_object(lox_object*);
+
+    environment* env, *globals;
     ~interpreter() override = default;
     interpreter();
     void eval(Expr* exp);

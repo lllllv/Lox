@@ -19,6 +19,8 @@ public:
 
     lox_object();
     lox_object(const lox_object&) = default;
+    virtual ~lox_object() = default;
+
     explicit lox_object(string& s);
     explicit lox_object(string&& s);
     explicit lox_object(double num);
