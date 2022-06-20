@@ -4,7 +4,7 @@
 
 #ifndef LOX_NATIVE_FUNCTIONS_H
 #define LOX_NATIVE_FUNCTIONS_H
-
+#include <chrono>
 #include "lox_callable.h"
 
 using std::chrono::duration_cast;

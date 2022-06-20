@@ -320,7 +320,7 @@ bool interpreter::_evaluate_cond(Expr *expr)
 
 void interpreter::Visit_Call_Expr(Call_Expr * expr)
 {
-    _evaluate(expr);
+    _evaluate(expr->callee);
     lox_object* callee = im_results.top();
     im_results.pop();
     auto* arguments = new vector<lox_object*>();
@@ -351,3 +351,5 @@ void interpreter::Visit_Function_Stmt(Function_Stmt *stmt)
     env->define(stmt->name->lexeme, fun);
 }
 
+// 228行解释函数调用时，env->get()函数的实现返回new lox_object(目标对象)，实现
+// 有误，应当运行时判断从map中获取的内容的类型，调用相应的构造函数（即new lox_function()）

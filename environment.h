@@ -23,7 +23,4 @@ public:
     lox_object* get(const Token& name);
 };
 
-// test
-// test
-
 #endif //LOX_ENVIRONMENT_H
