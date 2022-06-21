@@ -153,6 +153,13 @@ public:
     void accept(Visitor* v) override;
 };
 
+class Return_Stmt : public Stmt {
+public:
+    Token* keyword;
+    Expr* value;
+    Return_Stmt(Token* keyword, Expr* value) : keyword(keyword), value(value){};
+    void accept(Visitor* v) override;
+};
 
 
 #endif //LOX_AST_H

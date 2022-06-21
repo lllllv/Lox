@@ -23,6 +23,7 @@ class Block_Stmt;
 class If_Stmt;
 class While_Stmt;
 class Function_Stmt;
+class Return_Stmt;
 
 class Visitor {
 public:
@@ -43,6 +44,7 @@ public:
     virtual void Visit_If_Stmt(If_Stmt*) = 0;
     virtual void Visit_While_Stmt(While_Stmt*) = 0;
     virtual void Visit_Function_Stmt(Function_Stmt*) = 0;
+    virtual void Visit_Return_Stmt(Return_Stmt*) = 0;
 };
 
 

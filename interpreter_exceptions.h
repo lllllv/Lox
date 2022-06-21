@@ -4,6 +4,7 @@
 
 #ifndef LOX_INTERPRETER_EXCEPTIONS_H
 #define LOX_INTERPRETER_EXCEPTIONS_H
+#include "lox_object.h"
 
 class parse_error : public exception {
 
@@ -23,5 +24,18 @@ public:
         return "interpreter runtime error!";
     }
 };
+
+class return_control_flow_exception : public runtime_error {
+public:
+    lox_object* value;
+    return_control_flow_exception(const string &s, lox_object *value) : runtime_error(s), value(value){};
+};
+
+class return_result_exception : public runtime_error {
+public:
+    lox_object* value;
+    return_result_exception(const string &s, lox_object *value) : runtime_error(s), value(value){};
+};
+
 
 #endif //LOX_INTERPRETER_EXCEPTIONS_H

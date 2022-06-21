@@ -46,6 +46,7 @@ private:
     Stmt* while_stmt();
     Stmt* for_stmt();
     Function_Stmt* function(const string&);
+    Stmt* return_stmt();
 
 
     bool match(TokenType t);

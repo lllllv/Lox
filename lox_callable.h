@@ -7,6 +7,7 @@
 #include "AST.h"
 #include "lox_object.h"
 #include "environment.h"
+#include "interpreter_exceptions.h"
 
 class interpreter;
 

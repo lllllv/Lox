@@ -182,10 +182,11 @@ void interpreter::eval(Expr* expr) {
     delete res;
 }
 
-// Expression_Stmt like :  "a = 2;"  no need to pop;
+// Expression_Stmt like :  "a = 2;"  no need to pop???
 // Expression_Stmt like : "1+1;" need to pop; ?????
 void interpreter::Visit_Expression_Stmt(Expression_Stmt * expression) {
     _evaluate(expression->expr);
+    im_results.pop();
     //im_results.top().print();
 }
 
@@ -255,8 +256,14 @@ void interpreter::_execute_Block(vector<Stmt*>* stmts, environment* new_env)
     } catch(interpreter_runtime_error& e) {
 
     }
+    catch (return_control_flow_exception& r)
+    {
+        this->env = previous;
+        throw return_result_exception("using exception to return a value", r.value);
+    }
+    
+//  return时，该语句不会执行
 
-    this->env = previous;
 }
 
 interpreter::interpreter()
@@ -351,5 +358,16 @@ void interpreter::Visit_Function_Stmt(Function_Stmt *stmt)
     env->define(stmt->name->lexeme, fun);
 }
 
-// 228行解释函数调用时，env->get()函数的实现返回new lox_object(目标对象)，实现
-// 有误，应当运行时判断从map中获取的内容的类型，调用相应的构造函数（即new lox_function()）
+void interpreter::Visit_Return_Stmt(Return_Stmt* stmt)
+{
+    lox_object* value;
+    if(stmt->value != nullptr)
+    {
+        _evaluate(stmt->value);
+        value = im_results.top();
+        im_results.pop();
+    }
+    else
+        value = new lox_object();
+    throw return_control_flow_exception("using exception to clear call stack and return a value", value);
+}

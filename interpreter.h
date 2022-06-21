@@ -21,7 +21,7 @@ using namespace std;
 class interpreter : public Visitor{
 private:
 
-    stack<lox_object*> im_results;
+
     static bool is_truthy(const lox_object&);
     static bool is_equal(const lox_object&, const lox_object&);
 
@@ -41,8 +41,10 @@ private:
     void Visit_If_Stmt(If_Stmt*) override;
     void Visit_While_Stmt(While_Stmt*) override;
     void Visit_Function_Stmt(Function_Stmt*) override;
+    void Visit_Return_Stmt(Return_Stmt*) override;
 
 public:
+    stack<lox_object*> im_results;
     void _evaluate(Expr* exp);
     bool _evaluate_cond(Expr* expr);
     void _execute(Stmt* stmt);

@@ -96,3 +96,8 @@ void Function_Stmt::accept(Visitor *v)
 {
     v->Visit_Function_Stmt(this);
 }
+
+void Return_Stmt::accept(Visitor *v)
+{
+    v->Visit_Return_Stmt(this);
+}

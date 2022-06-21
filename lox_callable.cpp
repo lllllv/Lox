@@ -11,9 +11,15 @@ lox_object *lox_function::call(interpreter& i, vector<lox_object *> &arguments)
     for(int j = 0; j < declaration->params->size(); j++)
         new_env->define((*declaration->params)[j]->lexeme, arguments[j]);
 
-    i._execute_Block(declaration->body, new_env);
+    try {
+        i._execute_Block(declaration->body, new_env);
+    } catch (return_result_exception& r)
+    {
+        return r.value;
+    }
+
     delete new_env;
-    return nullptr;
+    return new lox_object();
 }
 
 int lox_function::arity()

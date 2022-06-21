@@ -37,6 +37,7 @@ public:
     void Visit_If_Stmt(If_Stmt*) override;
     void Visit_While_Stmt(While_Stmt*) override;
     void Visit_Function_Stmt(Function_Stmt*) override;
+    void Visit_Return_Stmt(Return_Stmt*) override;
 };
 
 

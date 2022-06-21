@@ -15,7 +15,15 @@ void environment::define(const string &name, lox_object* l)
 lox_object* environment::get(const Token &name)
 {
     if(values.find(name.lexeme) != values.end())
-        return new lox_object(*values[name.lexeme]);
+    {
+        if(auto* callee = dynamic_cast<lox_callable*>(values[name.lexeme]))
+        {
+            return callee;
+        }
+        else
+            return new lox_object(*values[name.lexeme]);
+    }
+
     if(enclosing != nullptr)
         return enclosing->get(name);
 

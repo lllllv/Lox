@@ -202,6 +202,8 @@ Stmt *parser::statement()
         return while_stmt();
     if(match(FOR))
         return for_stmt();
+    if(match(RETURN))
+        return return_stmt();
     return expression_stmt();
 }
 
@@ -418,6 +420,16 @@ Function_Stmt *parser::function(const string& kind)
 
     auto body = block();
     return new Function_Stmt(name, parameters, body);
+}
+
+Stmt *parser::return_stmt()
+{
+    Token* keyword = previous();
+    Expr* value = nullptr;
+    if(!check(SEMICOLON))
+        value = expression();
+    consume(SEMICOLON, "Expect ';' after return value.");
+    return new Return_Stmt(keyword, value);
 }
 
 

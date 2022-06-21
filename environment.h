@@ -8,6 +8,7 @@
 #include <unordered_map>
 #include "token.h"
 #include "lox_object.h"
+#include "lox_callable.h"
 #include "interpreter_exceptions.h"
 
 class environment
