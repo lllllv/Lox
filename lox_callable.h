@@ -22,8 +22,9 @@ public:
 class lox_function : public lox_callable {
 private:
     Function_Stmt* declaration;
+    environment* closure;
 public:
-    explicit lox_function(Function_Stmt* declaration) : declaration(declaration) {};
+    explicit lox_function(Function_Stmt* declaration, environment* closure) : declaration(declaration), closure(closure) {};
     lox_object* call(interpreter& i, vector<lox_object*>& arguments) override;
     int arity() override;
     string to_string() override;

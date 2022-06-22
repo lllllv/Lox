@@ -179,7 +179,7 @@ void interpreter::eval(Expr* expr) {
     lox_object* res = im_results.top();
     im_results.pop();
     _print_lox_object(res);
-    delete res;
+    //delete res;
 }
 
 // Expression_Stmt like :  "a = 2;"  no need to pop???
@@ -195,7 +195,6 @@ void interpreter::Visit_Print_Stmt(Print_Stmt *p) {
     lox_object* tmp = im_results.top();
     im_results.pop();
     _print_lox_object(tmp);
-    delete tmp;
     cout << endl;
 }
 
@@ -261,8 +260,10 @@ void interpreter::_execute_Block(vector<Stmt*>* stmts, environment* new_env)
         this->env = previous;
         throw return_result_exception("using exception to return a value", r.value);
     }
-    
-//  return时，该语句不会执行
+
+    // 保证无论是block的return语句导致返回还是block执行完毕返回，原来的环境都会被恢复
+    this->env = previous;
+
 
 }
 
