@@ -21,7 +21,10 @@ public:
     explicit environment(environment* enclosing);
     void define(const string& name, lox_object* l);
     void assign(const Token& name, lox_object* l);
+    void assign_at(int dist, const Token& name, lox_object* l);
     lox_object* get(const Token& name);
+    lox_object* get_at(int dist, Token* name);
+    environment* ancestor(int dist);
 };
 
 #endif //LOX_ENVIRONMENT_H

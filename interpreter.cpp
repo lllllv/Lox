@@ -225,7 +225,8 @@ void interpreter::Visit_Var_Stmt(Var_Stmt *v)
 
 void interpreter::Visit_Variable_Expr(Variable_Expr *expr)
 {
-    im_results.push(env->get(*expr->name));
+    //im_results.push(env->get(*expr->name));
+    im_results.push(lookup_variable(expr->name, expr));
 }
 
 //  evaluate an Assignment_Expr produces
@@ -234,7 +235,16 @@ void interpreter::Visit_Assignment_Expr(Assignment_Expr *expr)
 {
     _evaluate(expr->expr);
     lox_object* l = im_results.top();
-    env->assign(*expr->name, l);
+    // env->assign(*expr->name, l);
+
+    if(locals.find(expr) != locals.end())
+    {
+        int dist = locals[expr];
+        env->assign_at(dist, *expr->name, l);
+    }
+    else
+        globals->assign(*expr->name, l);
+
 
 }
 
@@ -242,7 +252,7 @@ void interpreter::Visit_Block_Stmt(Block_Stmt * stmt)
 {
     auto new_env = new environment(this->env);
     _execute_Block(stmt->stmts, new_env);
-    delete new_env;
+    //delete new_env;
 }
 
 void interpreter::_execute_Block(vector<Stmt*>* stmts, environment* new_env)
@@ -355,7 +365,7 @@ void interpreter::Visit_Call_Expr(Call_Expr * expr)
 
 void interpreter::Visit_Function_Stmt(Function_Stmt *stmt)
 {
-    auto* fun = new lox_function(stmt);
+    auto* fun = new lox_function(stmt, env);
     env->define(stmt->name->lexeme, fun);
 }
 
@@ -371,4 +381,20 @@ void interpreter::Visit_Return_Stmt(Return_Stmt* stmt)
     else
         value = new lox_object();
     throw return_control_flow_exception("using exception to clear call stack and return a value", value);
+}
+
+void interpreter::resolve(Expr *expr, int depth)
+{
+    locals[expr] = depth;
+}
+
+lox_object *interpreter::lookup_variable(Token *name, Expr *expr)
+{
+    if(locals.find(expr) != locals.end())
+    {
+        int dist = locals[expr];
+        return env->get_at(dist, name);
+    }
+    else
+        return globals->get(*name);
 }

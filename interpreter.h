@@ -20,7 +20,7 @@ using namespace std;
 
 class interpreter : public Visitor{
 private:
-
+    unordered_map<Expr*, int> locals;
 
     static bool is_truthy(const lox_object&);
     static bool is_equal(const lox_object&, const lox_object&);
@@ -43,6 +43,7 @@ private:
     void Visit_Function_Stmt(Function_Stmt*) override;
     void Visit_Return_Stmt(Return_Stmt*) override;
 
+    lox_object* lookup_variable(Token* name, Expr* expr);
 public:
     stack<lox_object*> im_results;
     void _evaluate(Expr* exp);
@@ -56,6 +57,7 @@ public:
     interpreter();
     void eval(Expr* exp);
     void interpret(const vector<Stmt*>& stmts);
+    void resolve(Expr* expr, int depth);
 };
 
 

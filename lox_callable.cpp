@@ -4,10 +4,11 @@
 
 #include "lox_callable.h"
 #include "interpreter.h"
+#include "environment.h"
 
 lox_object *lox_function::call(interpreter& i, vector<lox_object *> &arguments)
 {
-    auto* new_env = new environment(i.globals);
+    auto* new_env = new environment(closure);
     for(int j = 0; j < declaration->params->size(); j++)
         new_env->define((*declaration->params)[j]->lexeme, arguments[j]);
 

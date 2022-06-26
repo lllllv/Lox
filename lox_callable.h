@@ -6,10 +6,12 @@
 #define LOX_LOX_CALLABLE_H
 #include "AST.h"
 #include "lox_object.h"
-#include "environment.h"
+
 #include "interpreter_exceptions.h"
 
+
 class interpreter;
+class environment;
 
 class lox_callable : public lox_object {
 public:

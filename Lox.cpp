@@ -1,9 +1,11 @@
 #include "Lox.h"
+#include "AST_Printer.h"
 #include "scanner.h"
 #include "parser.h"
-#include "AST_Printer.h"
+#include "resolver.h"
 #include "interpreter.h"
 
+bool had_error;
 
 void Lox::run_file(const string& file)
 {
@@ -57,13 +59,18 @@ void Lox::run_code(string code)
     printer.print(stmts);
     cout << endl;
     cout << "*****************Interpreter*****************" << endl;
+
     interpreter i;
-    i.interpret(stmts);
+    resolver r(&i);
+    r.resolve(&stmts);
+    if(!had_error)
+        i.interpret(stmts);
 
 }
 
 Lox::Lox(int argc, char** argv)
 {
+    had_error = false;
 	/*if (argc > 2)
 	{
 		cout << "Usage: lox [script]" << endl;

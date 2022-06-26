@@ -53,3 +53,21 @@ environment::environment(environment *enclosing) : enclosing(enclosing)
 
 }
 
+lox_object *environment::get_at(int dist, Token* name)
+{
+    return ancestor(dist)->get(*name);
+}
+
+environment *environment::ancestor(int dist)
+{
+    auto env = this;
+    for(int i = 0; i < dist; i++)
+        env = env->enclosing;
+    return env;
+}
+
+void environment::assign_at(int dist, const Token &name, lox_object *l)
+{
+    ancestor(dist)->assign(name, l);
+}
+
