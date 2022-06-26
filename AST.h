@@ -161,5 +161,12 @@ public:
     void accept(Visitor* v) override;
 };
 
+class Class_Stmt : public Stmt {
+public:
+    Token* name;
+    vector<Function_Stmt*>* methods;
+    Class_Stmt(Token* name, vector<Function_Stmt*>* methods) : name(name), methods(methods){};
+    void accept(Visitor* v) override;
+};
 
 #endif //LOX_AST_H

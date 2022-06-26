@@ -32,3 +32,8 @@ string lox_function::to_string()
 {
     return "<fn " + declaration->name->lexeme + ">";
 }
+
+lox_function::lox_function(Function_Stmt *declaration, environment *closure) : declaration(declaration), closure(closure)
+{
+
+}

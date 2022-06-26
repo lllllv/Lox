@@ -47,6 +47,7 @@ private:
     Stmt* for_stmt();
     Function_Stmt* function(const string&);
     Stmt* return_stmt();
+    Stmt* class_declaration();
 
 
     bool match(TokenType t);

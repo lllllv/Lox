@@ -43,7 +43,7 @@ public:
     void Visit_Print_Stmt(Print_Stmt*) override;
     void Visit_Return_Stmt(Return_Stmt*) override;
     void Visit_While_Stmt(While_Stmt*) override;
-
+    void Visit_Class_Stmt(Class_Stmt*) override;
 
 
     void Visit_Variable_Expr(Variable_Expr*) override;

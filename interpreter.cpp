@@ -147,28 +147,36 @@ void interpreter::_print_lox_object(lox_object* l) {
         cout << tmp->to_string();
     else
     {
-        switch(l->type)
+        if(auto* instance = dynamic_cast<lox_instance*>(l))
         {
-            case NUMBER:
-                cout << l->num;
-                break;
-            case STRING:
-                cout << l->str;
-                break;
-            case NIL:
-                cout << "nil";
-                break;
-            case TRUE:
-                cout << "true";
-                break;
-            case FALSE:
-                cout << "false";
-                break;
-
-            default:
-                cout << "Unknown result!";
-                break;
+            cout << instance->to_string();
         }
+        else
+        {
+            switch(l->type)
+            {
+                case NUMBER:
+                    cout << l->num;
+                    break;
+                case STRING:
+                    cout << l->str;
+                    break;
+                case NIL:
+                    cout << "nil";
+                    break;
+                case TRUE:
+                    cout << "true";
+                    break;
+                case FALSE:
+                    cout << "false";
+                    break;
+
+                default:
+                    cout << "Unknown result!";
+                    break;
+            }
+        }
+
     }
 
 
@@ -397,4 +405,11 @@ lox_object *interpreter::lookup_variable(Token *name, Expr *expr)
     }
     else
         return globals->get(*name);
+}
+
+void interpreter::Visit_Class_Stmt(Class_Stmt * stmt)
+{
+    env->define(stmt->name->lexeme, nullptr);
+    auto* new_class = new lox_class(stmt->name->lexeme);
+    env->assign(*stmt->name, new_class);
 }

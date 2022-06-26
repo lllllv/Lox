@@ -198,6 +198,12 @@ void resolver::Visit_Unary_Expr(Unary_Expr * expr)
     resolve(expr->operand);
 }
 
+void resolver::Visit_Class_Stmt(Class_Stmt * stmt)
+{
+    declare(stmt->name);
+    define(stmt->name);
+}
+
 
 
 

@@ -3,6 +3,7 @@
 //
 
 #include "environment.h"
+#include "lox_instance.h"
 
 void environment::define(const string &name, lox_object* l)
 {
@@ -17,9 +18,9 @@ lox_object* environment::get(const Token &name)
     if(values.find(name.lexeme) != values.end())
     {
         if(auto* callee = dynamic_cast<lox_callable*>(values[name.lexeme]))
-        {
             return callee;
-        }
+        else if(auto* instance = dynamic_cast<lox_instance*>(values[name.lexeme]))
+            return instance;
         else
             return new lox_object(*values[name.lexeme]);
     }

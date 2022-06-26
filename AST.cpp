@@ -101,3 +101,8 @@ void Return_Stmt::accept(Visitor *v)
 {
     v->Visit_Return_Stmt(this);
 }
+
+void Class_Stmt::accept(Visitor *v)
+{
+    v->Visit_Class_Stmt(this);
+}

@@ -139,8 +139,6 @@ Expr *parser::primary() {
 
 
 
-
-
 void parser::error(const Token& t, const string& msg) {
     if(t.type == ENDOFFILE)
         report(t.line, " at end.", msg);
@@ -204,6 +202,8 @@ Stmt *parser::statement()
         return for_stmt();
     if(match(RETURN))
         return return_stmt();
+    if(match(CLASS))
+        return class_declaration();
     return expression_stmt();
 }
 
@@ -430,6 +430,18 @@ Stmt *parser::return_stmt()
         value = expression();
     consume(SEMICOLON, "Expect ';' after return value.");
     return new Return_Stmt(keyword, value);
+}
+
+Stmt *parser::class_declaration()
+{
+    Token* name = consume(IDENTIFIER, "Expect class name.");
+    consume(LEFT_BRACE, "Expect '{' before class body.");
+    auto* methods = new vector<Function_Stmt*>();
+    while (!check(RIGHT_BRACE) && !is_end())
+        methods->push_back(function("method"));
+
+    consume(RIGHT_BRACE, "Expect '}' after class body.");
+    return new Class_Stmt(name, methods);
 }
 
 

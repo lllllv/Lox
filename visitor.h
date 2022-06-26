@@ -24,6 +24,7 @@ class If_Stmt;
 class While_Stmt;
 class Function_Stmt;
 class Return_Stmt;
+class Class_Stmt;
 
 class Visitor {
 public:
@@ -45,6 +46,7 @@ public:
     virtual void Visit_While_Stmt(While_Stmt*) = 0;
     virtual void Visit_Function_Stmt(Function_Stmt*) = 0;
     virtual void Visit_Return_Stmt(Return_Stmt*) = 0;
+    virtual void Visit_Class_Stmt(Class_Stmt*) = 0;
 };
 
 

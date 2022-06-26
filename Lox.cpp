@@ -55,8 +55,8 @@ void Lox::run_code(string code)
     parser p(move(tokens));
     vector<Stmt*> stmts = p.parse();
 
-    AST_Printer printer;
-    printer.print(stmts);
+    //AST_Printer printer;
+    //printer.print(stmts);
     cout << endl;
     cout << "*****************Interpreter*****************" << endl;
 

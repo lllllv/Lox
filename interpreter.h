@@ -13,6 +13,7 @@
 #include "interpreter_exceptions.h"
 #include "environment.h"
 #include "native_functions.h"
+#include "lox_class.h"
 
 using namespace std;
 
@@ -42,6 +43,7 @@ private:
     void Visit_While_Stmt(While_Stmt*) override;
     void Visit_Function_Stmt(Function_Stmt*) override;
     void Visit_Return_Stmt(Return_Stmt*) override;
+    void Visit_Class_Stmt(Class_Stmt*) override;
 
     lox_object* lookup_variable(Token* name, Expr* expr);
 public:

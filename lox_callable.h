@@ -26,7 +26,7 @@ private:
     Function_Stmt* declaration;
     environment* closure;
 public:
-    explicit lox_function(Function_Stmt* declaration, environment* closure) : declaration(declaration), closure(closure) {};
+    explicit lox_function(Function_Stmt* declaration, environment* closure);
     lox_object* call(interpreter& i, vector<lox_object*>& arguments) override;
     int arity() override;
     string to_string() override;
