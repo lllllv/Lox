@@ -54,6 +54,8 @@ public:
     void Visit_Literal_Expr(Literal_Expr*) override;
     void Visit_Logical_Expr(Logical_Expr*) override;
     void Visit_Unary_Expr(Unary_Expr*) override;
+    void Visit_Get_Expr(Get_Expr*) override;
+    void Visit_Set_Expr(Set_Expr*) override;
 
     static void report(int line, const string& where, const string& msg);
     static void error(const Token& t, const string& msg);

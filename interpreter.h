@@ -34,6 +34,8 @@ private:
     void Visit_Assignment_Expr(Assignment_Expr*) override;
     void Visit_Logical_Expr(Logical_Expr*) override;
     void Visit_Call_Expr(Call_Expr*) override;
+    void Visit_Get_Expr(Get_Expr*) override;
+    void Visit_Set_Expr(Set_Expr*) override;
 
     void Visit_Expression_Stmt(Expression_Stmt*) override;
     void Visit_Print_Stmt(Print_Stmt*) override;

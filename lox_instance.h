@@ -4,18 +4,21 @@
 
 #ifndef LOX_LOX_INSTANCE_H
 #define LOX_LOX_INSTANCE_H
-
-
+#include <unordered_map>
 #include "lox_object.h"
 
 
 class lox_class;
 
 class lox_instance : public lox_object {
+private:
+    unordered_map<string, lox_object*> fields;
 public:
     lox_class* c;
     explicit lox_instance(lox_class* c) : c(c){};
     string to_string();
+    lox_object* get(Token* name);
+    void set(Token* name, lox_object* value);
 };
 
 

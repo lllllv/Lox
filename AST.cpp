@@ -106,3 +106,13 @@ void Class_Stmt::accept(Visitor *v)
 {
     v->Visit_Class_Stmt(this);
 }
+
+void Get_Expr::accept(Visitor *v)
+{
+    v->Visit_Get_Expr(this);
+}
+
+void Set_Expr::accept(Visitor *v)
+{
+    v->Visit_Set_Expr(this);
+}

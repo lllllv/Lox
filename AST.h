@@ -92,6 +92,23 @@ public:
     void accept(Visitor* v) override;
 };
 
+class Get_Expr : public Expr {
+public:
+    Expr* object;
+    Token* name;
+    Get_Expr(Expr* object, Token* name) : object(object), name(name){};
+    void accept(Visitor* v) override;
+};
+
+class Set_Expr : public Expr {
+public:
+    Expr* object;
+    Token* name;
+    Expr* value;
+    Set_Expr(Expr* object, Token* name, Expr* value) : object(object), name(name), value(value){};
+    void accept(Visitor* v) override;
+};
+
 
 class Stmt : public AST_Node {
 public:

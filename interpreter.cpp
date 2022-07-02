@@ -413,3 +413,31 @@ void interpreter::Visit_Class_Stmt(Class_Stmt * stmt)
     auto* new_class = new lox_class(stmt->name->lexeme);
     env->assign(*stmt->name, new_class);
 }
+
+void interpreter::Visit_Get_Expr(Get_Expr* expr)
+{
+    _evaluate(expr->object);
+    auto* tmp = im_results.top();
+    im_results.pop();
+    if(auto* instance = dynamic_cast<lox_instance*>(tmp))
+        im_results.push(instance->get(expr->name));
+    else
+        throw  interpreter_runtime_error(expr->name, "Only instances have properties.");
+}
+
+void interpreter::Visit_Set_Expr(Set_Expr * expr)
+{
+    _evaluate(expr->object);
+    auto* obj = im_results.top();
+    im_results.pop();
+
+    if(auto* object = dynamic_cast<lox_instance*>(obj))
+    {
+        _evaluate(expr->value);
+        auto* value = im_results.top();
+
+        object->set(expr->name, value);
+    }
+    else
+        throw interpreter_runtime_error(expr->name, "Only instances have fields.");
+}

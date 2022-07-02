@@ -204,6 +204,17 @@ void resolver::Visit_Class_Stmt(Class_Stmt * stmt)
     define(stmt->name);
 }
 
+void resolver::Visit_Get_Expr(Get_Expr * expr)
+{
+    resolve(expr->object);
+}
+
+void resolver::Visit_Set_Expr(Set_Expr * expr)
+{
+    resolve(expr->value);
+    resolve(expr->object);
+}
+
 
 
 

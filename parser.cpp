@@ -258,6 +258,10 @@ Expr *parser::assignment()
             auto* name = new Token(*(var_expr->name));
             return new Assignment_Expr(name, value);
         }
+        else if(auto* get_expr = dynamic_cast<Get_Expr*>(expr))
+        {
+            return new Set_Expr(get_expr->object, get_expr->name, value);
+        }
 
         error(*equals, "Invalid assignment target.");
     }
@@ -378,6 +382,11 @@ Expr *parser::call()
     {
         if(match(LEFT_PAREN))
             expr = finish_call(expr);
+        else if(match(DOT))
+        {
+            Token* name = consume(IDENTIFIER,"Expect property name after '.'.");
+            expr = new Get_Expr(expr, name);
+        }
         else
             break;
     }
