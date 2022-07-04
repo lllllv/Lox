@@ -6,6 +6,7 @@
 #define LOX_LOX_CALLABLE_H
 #include "AST.h"
 #include "lox_object.h"
+#include "lox_instance.h"
 
 #include "interpreter_exceptions.h"
 
@@ -25,8 +26,10 @@ class lox_function : public lox_callable {
 private:
     Function_Stmt* declaration;
     environment* closure;
+    bool is_initializer;
 public:
-    explicit lox_function(Function_Stmt* declaration, environment* closure);
+    lox_function(Function_Stmt* declaration, environment* closure, bool is_initializer);
+    lox_function* bind(lox_instance* instance);
     lox_object* call(interpreter& i, vector<lox_object*>& arguments) override;
     int arity() override;
     string to_string() override;

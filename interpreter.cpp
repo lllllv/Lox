@@ -373,7 +373,7 @@ void interpreter::Visit_Call_Expr(Call_Expr * expr)
 
 void interpreter::Visit_Function_Stmt(Function_Stmt *stmt)
 {
-    auto* fun = new lox_function(stmt, env);
+    auto* fun = new lox_function(stmt, env, false);
     env->define(stmt->name->lexeme, fun);
 }
 
@@ -410,8 +410,16 @@ lox_object *interpreter::lookup_variable(Token *name, Expr *expr)
 void interpreter::Visit_Class_Stmt(Class_Stmt * stmt)
 {
     env->define(stmt->name->lexeme, nullptr);
-    auto* new_class = new lox_class(stmt->name->lexeme);
-    env->assign(*stmt->name, new_class);
+
+    auto* methods = new unordered_map<string, lox_function*>();
+    for(auto* method : *stmt->methods)
+    {
+        auto* function = new lox_function(method, this->env, method->name->lexeme == "init");
+        (*methods)[method->name->lexeme] = function;
+    }
+    auto* new_lox_class = new lox_class(stmt->name->lexeme, methods);
+
+    env->assign(*stmt->name, new_lox_class);
 }
 
 void interpreter::Visit_Get_Expr(Get_Expr* expr)
@@ -440,4 +448,9 @@ void interpreter::Visit_Set_Expr(Set_Expr * expr)
     }
     else
         throw interpreter_runtime_error(expr->name, "Only instances have fields.");
+}
+
+void interpreter::Visit_This_Expr(This_Expr * expr)
+{
+    im_results.push(lookup_variable(expr->keyword, expr));
 }

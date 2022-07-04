@@ -24,6 +24,8 @@ public:
     void assign_at(int dist, const Token& name, lox_object* l);
     lox_object* get(const Token& name);
     lox_object* get_at(int dist, Token* name);
+    lox_object* get(const string& name);
+    lox_object* get_at(int dist, const string& name);
     environment* ancestor(int dist);
 };
 

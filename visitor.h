@@ -16,6 +16,7 @@ class Logical_Expr;
 class Call_Expr;
 class Get_Expr;
 class Set_Expr;
+class This_Expr;
 
 class Stmt;
 class Expression_Stmt;
@@ -41,6 +42,7 @@ public:
     virtual void Visit_Call_Expr(Call_Expr*) = 0;
     virtual void Visit_Get_Expr(Get_Expr*) = 0;
     virtual void Visit_Set_Expr(Set_Expr*) = 0;
+    virtual void Visit_This_Expr(This_Expr*) = 0;
 
     virtual void Visit_Expression_Stmt(Expression_Stmt*) = 0;
     virtual void Visit_Print_Stmt(Print_Stmt*) = 0;

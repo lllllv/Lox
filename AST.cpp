@@ -116,3 +116,8 @@ void Set_Expr::accept(Visitor *v)
 {
     v->Visit_Set_Expr(this);
 }
+
+void This_Expr::accept(Visitor *v)
+{
+    v->Visit_This_Expr(this);
+}

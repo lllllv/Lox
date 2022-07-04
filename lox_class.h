@@ -16,9 +16,11 @@ using namespace std;
 class lox_class : public lox_callable {
 public:
     string name;
-    explicit lox_class(string  name);
+    unordered_map<string, lox_function*>* methods;
+    lox_class(string  name, unordered_map<string, lox_function*>* methods);
     string to_string() override;
     lox_object* call(interpreter& i, vector<lox_object*>& arguments) override;
+    lox_function* find_method(const string& str) const;
     int arity() override;
 };
 

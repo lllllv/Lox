@@ -72,3 +72,14 @@ void environment::assign_at(int dist, const Token &name, lox_object *l)
     ancestor(dist)->assign(name, l);
 }
 
+lox_object *environment::get_at(int dist, const string &name)
+{
+    return ancestor(dist)->get(name);
+}
+
+lox_object *environment::get(const string &name)
+{
+    auto* t = new Token(STRING, name, {}, -1);
+    return get(*t);
+}
+

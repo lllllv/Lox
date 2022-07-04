@@ -109,6 +109,13 @@ public:
     void accept(Visitor* v) override;
 };
 
+class This_Expr : public Expr {
+public:
+    Token* keyword;
+    explicit This_Expr(Token* keyword) : keyword(keyword){};
+    void accept(Visitor* v) override;
+};
+
 
 class Stmt : public AST_Node {
 public:

@@ -12,15 +12,31 @@ string lox_class::to_string()
 lox_object *lox_class::call(interpreter &i, vector<lox_object *> &arguments)
 {
     auto* instance = new lox_instance(this);
+    lox_function* initializer = find_method("init");
+    if(initializer != nullptr)
+        initializer->bind(instance)->call(i, arguments);
+
     return instance;
 }
 
 int lox_class::arity()
 {
-    return 0;
+    lox_function* initializer = find_method("init");
+    if(initializer == nullptr)
+        return 0;
+    else
+        return initializer->arity();
 }
 
-lox_class::lox_class(string name) : name(std::move(name))
+lox_class::lox_class(string name, unordered_map<string, lox_function*>* methods) : name(std::move(name)), methods(methods)
 {
 
+}
+
+lox_function *lox_class::find_method(const string &str) const
+{
+    if(methods->find(str) != methods->end())
+        return (*methods)[str];
+
+    return nullptr;
 }

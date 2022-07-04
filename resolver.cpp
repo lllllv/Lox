@@ -155,7 +155,13 @@ void resolver::Visit_Return_Stmt(Return_Stmt *stmt)
     if(current_function != FUNCTION)
         error(*stmt->keyword, "Can't return from top-level code.");
     else if(stmt->value != nullptr)
-        resolve(stmt->value);
+    {
+        if(current_function == INITIALIZER)
+            error(*stmt->keyword, "Can't return a value from an initializer.");
+        else
+            resolve(stmt->value);
+    }
+
 }
 
 void resolver::Visit_While_Stmt(While_Stmt * stmt)
@@ -200,8 +206,18 @@ void resolver::Visit_Unary_Expr(Unary_Expr * expr)
 
 void resolver::Visit_Class_Stmt(Class_Stmt * stmt)
 {
+    class_type enclosing_class = current_class;
+    current_class = CLASS;
     declare(stmt->name);
     define(stmt->name);
+    begin_scope();
+    (*scopes.back())["this"] = true;
+
+    for(auto* method : *stmt->methods)
+        resolve_function(method, METHOD);
+
+    end_scope();
+    current_class = enclosing_class;
 }
 
 void resolver::Visit_Get_Expr(Get_Expr * expr)
@@ -213,6 +229,14 @@ void resolver::Visit_Set_Expr(Set_Expr * expr)
 {
     resolve(expr->value);
     resolve(expr->object);
+}
+
+void resolver::Visit_This_Expr(This_Expr * expr)
+{
+    if(current_class == NONE_CLASS)
+        error(*expr->keyword, "Can't use 'this' outside of a class.");
+    else
+        resolve_local(expr, expr->keyword);
 }
 
 

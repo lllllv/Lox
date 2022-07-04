@@ -133,7 +133,10 @@ Expr *parser::primary() {
 
     if(match(IDENTIFIER))
         return new Variable_Expr(previous());
-    
+
+    if(match(THIS))
+        return new This_Expr(previous());
+
     throw report_error(*peek(), "Expect expression.");
 }
 

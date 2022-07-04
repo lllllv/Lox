@@ -14,10 +14,24 @@ class resolver : public Visitor
 {
 private:
     enum function_type {
-        NONE,
-        FUNCTION
+        NONE_FUNCTION,
+        FUNCTION,
+        METHOD,
+        INITIALIZER
     };
+
+    enum class_type {
+        NONE_CLASS,
+        CLASS
+    };
+
+    // Works kind like 'flag'. When entering corresponding scope, set the 'flag' to
+    // right value and when exiting the scope, restore the previous state.
+    // In 'resolve_function' and  'Visit_Class_Stmt'.
     function_type current_function;
+    class_type current_class;
+
+
     interpreter* inter;
     vector<unordered_map<string, bool>*> scopes;
 
@@ -26,7 +40,7 @@ private:
     void declare(Token* name);
     void define(Token* name);
 public:
-    explicit resolver(interpreter* i) : inter(i), current_function(FUNCTION){};
+    explicit resolver(interpreter* i) : inter(i), current_function(FUNCTION), current_class(NONE_CLASS){};
     void resolve(vector<Stmt*>* stmts);
     void resolve(Stmt* stmt);
     void resolve(Expr* expr);
@@ -56,6 +70,7 @@ public:
     void Visit_Unary_Expr(Unary_Expr*) override;
     void Visit_Get_Expr(Get_Expr*) override;
     void Visit_Set_Expr(Set_Expr*) override;
+    void Visit_This_Expr(This_Expr*) override;
 
     static void report(int line, const string& where, const string& msg);
     static void error(const Token& t, const string& msg);
