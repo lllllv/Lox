@@ -13,6 +13,7 @@ class scanner
 private:
 	string& code;
 	int start, end, current, line;
+	// unique_ptr ?
 	vector<Token> tokens;
 	map<string, Token> keyword_table;
 
@@ -30,5 +31,6 @@ private:
 	void handle_identifier();
 public:
 	explicit scanner(string& code);
+	// unique_ptr?
 	vector<Token> scan_Tokens();
 };
