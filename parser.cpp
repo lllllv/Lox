@@ -137,6 +137,14 @@ Expr *parser::primary() {
     if(match(THIS))
         return new This_Expr(previous());
 
+    if(match(SUPER))
+    {
+        Token* keyword = previous();
+        consume(DOT, "Expect '.' after 'super'.");
+        Token* method = consume(IDENTIFIER,"Expect superclass method name.");
+        return new Super_Expr(keyword, method);
+    }
+
     throw report_error(*peek(), "Expect expression.");
 }
 
@@ -447,13 +455,21 @@ Stmt *parser::return_stmt()
 Stmt *parser::class_declaration()
 {
     Token* name = consume(IDENTIFIER, "Expect class name.");
+    Variable_Expr* super_class = nullptr;
+
+    if(match(LESS))
+    {
+        consume(IDENTIFIER, "Expect superclass name.");
+        super_class = new Variable_Expr(previous());
+    }
+
     consume(LEFT_BRACE, "Expect '{' before class body.");
     auto* methods = new vector<Function_Stmt*>();
     while (!check(RIGHT_BRACE) && !is_end())
         methods->push_back(function("method"));
 
     consume(RIGHT_BRACE, "Expect '}' after class body.");
-    return new Class_Stmt(name, methods);
+    return new Class_Stmt(name, super_class, methods);
 }
 
 

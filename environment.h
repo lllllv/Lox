@@ -15,8 +15,10 @@ class environment
 {
 private:
     unordered_map<string, lox_object*> values;
-    environment* enclosing;
+
 public:
+    environment* enclosing;
+
     environment();
     explicit environment(environment* enclosing);
     void define(const string& name, lox_object* l);

@@ -208,8 +208,15 @@ void interpreter::Visit_Print_Stmt(Print_Stmt *p) {
 
 void interpreter::interpret(const vector<Stmt *>& stmts)
 {
-    for(auto* i : stmts)
-        _execute(i);
+    try {
+        for(auto* stmt : stmts)
+            _execute(stmt);
+    } catch(interpreter_runtime_error& r)
+    {
+        cout << r.what() << endl;
+        cout << "Terminated." << endl;
+    }
+
 
 }
 
@@ -271,7 +278,7 @@ void interpreter::_execute_Block(vector<Stmt*>* stmts, environment* new_env)
         for(auto* stmt : *stmts)
             _execute(stmt);
     } catch(interpreter_runtime_error& e) {
-
+        cout << e.what() << endl;
     }
     catch (return_control_flow_exception& r)
     {
@@ -409,7 +416,27 @@ lox_object *interpreter::lookup_variable(Token *name, Expr *expr)
 
 void interpreter::Visit_Class_Stmt(Class_Stmt * stmt)
 {
+    lox_object* tmp;
+    lox_class* super_class = nullptr;
+
+    if(stmt->super_class != nullptr)
+    {
+        _evaluate(stmt->super_class);
+        tmp = im_results.top();
+        im_results.pop();
+
+        super_class = dynamic_cast<lox_class*>(tmp);
+        if(super_class == nullptr)
+            throw interpreter_runtime_error(stmt->super_class->name, "Superclass must be a class.");
+    }
+
     env->define(stmt->name->lexeme, nullptr);
+
+    if(stmt->super_class != nullptr)
+    {
+        env = new environment(env);
+        env->define("super", super_class);
+    }
 
     auto* methods = new unordered_map<string, lox_function*>();
     for(auto* method : *stmt->methods)
@@ -417,7 +444,10 @@ void interpreter::Visit_Class_Stmt(Class_Stmt * stmt)
         auto* function = new lox_function(method, this->env, method->name->lexeme == "init");
         (*methods)[method->name->lexeme] = function;
     }
-    auto* new_lox_class = new lox_class(stmt->name->lexeme, methods);
+    auto* new_lox_class = new lox_class(stmt->name->lexeme, super_class, methods);
+
+    if(stmt->super_class != nullptr)
+        env = env->enclosing;
 
     env->assign(*stmt->name, new_lox_class);
 }
@@ -453,4 +483,15 @@ void interpreter::Visit_Set_Expr(Set_Expr * expr)
 void interpreter::Visit_This_Expr(This_Expr * expr)
 {
     im_results.push(lookup_variable(expr->keyword, expr));
+}
+
+void interpreter::Visit_Super_Expr(Super_Expr* expr)
+{
+    int dist = locals[expr];
+    lox_class* super_class = dynamic_cast<lox_class*>(env->get_at(dist, "super"));
+    lox_instance* instance = dynamic_cast<lox_instance*>(env->get_at(dist - 1, "this"));
+    auto* method = super_class->find_method(expr->method->lexeme);
+    if(method == nullptr)
+        throw interpreter_runtime_error(expr->method, "Undefined property '" + expr->method->lexeme + "'.");
+    im_results.push(method->bind(instance));
 }

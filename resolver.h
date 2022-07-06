@@ -22,7 +22,8 @@ private:
 
     enum class_type {
         NONE_CLASS,
-        CLASS
+        CLASS,
+        SUBCLASS
     };
 
     // Works kind like 'flag'. When entering corresponding scope, set the 'flag' to
@@ -71,6 +72,7 @@ public:
     void Visit_Get_Expr(Get_Expr*) override;
     void Visit_Set_Expr(Set_Expr*) override;
     void Visit_This_Expr(This_Expr*) override;
+    void Visit_Super_Expr(Super_Expr*) override;
 
     static void report(int line, const string& where, const string& msg);
     static void error(const Token& t, const string& msg);

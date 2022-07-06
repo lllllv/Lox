@@ -210,6 +210,25 @@ void resolver::Visit_Class_Stmt(Class_Stmt * stmt)
     current_class = CLASS;
     declare(stmt->name);
     define(stmt->name);
+
+    if(stmt->super_class != nullptr &&
+        stmt->super_class->name->lexeme == stmt->name->lexeme)
+        error(*stmt->super_class->name, "A class can't inherit from itself.");
+
+    if(stmt->super_class != nullptr)
+    {
+        current_class = SUBCLASS;
+        resolve(stmt->super_class);
+    }
+
+
+    if(stmt->super_class != nullptr)
+    {
+        begin_scope();
+        (*scopes.back())["super"] = true;
+    }
+
+
     begin_scope();
     (*scopes.back())["this"] = true;
 
@@ -217,6 +236,10 @@ void resolver::Visit_Class_Stmt(Class_Stmt * stmt)
         resolve_function(method, METHOD);
 
     end_scope();
+
+    if(stmt->super_class != nullptr)
+        end_scope();
+
     current_class = enclosing_class;
 }
 
@@ -237,6 +260,15 @@ void resolver::Visit_This_Expr(This_Expr * expr)
         error(*expr->keyword, "Can't use 'this' outside of a class.");
     else
         resolve_local(expr, expr->keyword);
+}
+
+void resolver::Visit_Super_Expr(Super_Expr * expr)
+{
+    if(current_class == NONE_CLASS)
+        error(*expr->keyword, "Can't use 'super' outside of a class.");
+    else if(current_class != SUBCLASS)
+        error(*expr->keyword, "Can't use 'super' in a class with no superclass.");
+    resolve_local(expr, expr->keyword);
 }
 
 

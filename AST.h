@@ -116,6 +116,13 @@ public:
     void accept(Visitor* v) override;
 };
 
+class Super_Expr : public Expr {
+public:
+    Token* keyword, *method;
+    Super_Expr(Token* keyword, Token* method) : keyword(keyword), method(method){};
+    void accept(Visitor* v) override;
+};
+
 
 class Stmt : public AST_Node {
 public:
@@ -188,8 +195,10 @@ public:
 class Class_Stmt : public Stmt {
 public:
     Token* name;
+    Variable_Expr* super_class;
     vector<Function_Stmt*>* methods;
-    Class_Stmt(Token* name, vector<Function_Stmt*>* methods) : name(name), methods(methods){};
+    Class_Stmt(Token* name, Variable_Expr* super_class, vector<Function_Stmt*>* methods)
+        : name(name), methods(methods), super_class(super_class){};
     void accept(Visitor* v) override;
 };
 

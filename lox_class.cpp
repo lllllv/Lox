@@ -28,7 +28,7 @@ int lox_class::arity()
         return initializer->arity();
 }
 
-lox_class::lox_class(string name, unordered_map<string, lox_function*>* methods) : name(std::move(name)), methods(methods)
+lox_class::lox_class(string name,lox_class* super_class, unordered_map<string, lox_function*>* methods) : name(std::move(name)), super_class(super_class), methods(methods)
 {
 
 }
@@ -37,6 +37,9 @@ lox_function *lox_class::find_method(const string &str) const
 {
     if(methods->find(str) != methods->end())
         return (*methods)[str];
+
+    if(super_class != nullptr)
+        return super_class->find_method(str);
 
     return nullptr;
 }

@@ -19,10 +19,10 @@ public:
     Token* t;
 
     interpreter_runtime_error(Token* t, const string& s) : runtime_error(s), t(t){};
-    const char * what () const noexcept override
+    /*const char * what () const noexcept override
     {
         return "interpreter runtime error!";
-    }
+    }*/
 };
 
 class return_control_flow_exception : public runtime_error {
