@@ -5,9 +5,9 @@
 #include "parser.h"
 
 
-parser::parser(vector<Token> &&t) {
+parser::parser(unique_ptr<vector<unique_ptr<Token>>> tokens) {
     this->current = 0;
-    this->tokens = t;
+    this->tokens = move(tokens);
 }
 
 bool parser::match(TokenType t) {
@@ -27,25 +27,25 @@ bool parser::check(TokenType t) {
     return peek()->type == t;
 }
 
-Token* parser::peek() {
-    return &tokens[current];
+unique_ptr<Token> parser::peek() {
+    return move((*tokens)[current]);
 }
 
-Token* parser::previous() {
-    return &tokens[current - 1];
+unique_ptr<Token> parser::previous() {
+    return move((*tokens)[current - 1]);
 }
 
 bool parser::is_end() {
-    return this->tokens[current].type == ENDOFFILE;
+    return (*this->tokens)[current]->type == ENDOFFILE;
 }
 
-Token* parser::eat() {
+unique_ptr<Token> parser::eat() {
     if(!is_end())
         current++;
     return previous();
 }
 
-Token *parser::consume(TokenType t, const string& msg) {
+unique_ptr<Token> parser::consume(TokenType t, const string& msg) {
     if(check(t))
         return eat();
     else
@@ -53,18 +53,19 @@ Token *parser::consume(TokenType t, const string& msg) {
 }
 
 
-Expr* parser::expression() {
+unique_ptr<Expr> parser::expression() {
     return assignment();
 }
 
-Expr* parser::equality() {
-    Expr* expr = comparison();
+unique_ptr<Expr> parser::equality() {
+    unique_ptr<Expr> expr = comparison();
 
     while(match(BANG_EQUAL) || match(EQUAL_EQUAL))
     {
-        Token* op = previous();
-        Expr* rhs = comparison();
-        expr = new Binary_Expr(op, expr, rhs);
+        unique_ptr<Token> op = previous();
+        unique_ptr<Expr> rhs = comparison();
+        //expr = new Binary_Expr(op, expr, rhs);
+        expr = unique_ptr<Binary_Expr>(move(op), move(expr), move(rhs));
     }
     return expr;
 }
@@ -256,15 +257,31 @@ Stmt *parser::var_declaration()
     return new Var_Stmt(name, initializer);
 }
 
-Expr *parser::assignment()
+unique_ptr<Expr> parser::assignment()
 {
-    Expr* expr = logical_or();
+    unique_ptr<Expr> expr = logical_or();
     if(match(EQUAL))
     {
-        Token* equals = previous();
-        Expr* value = assignment();
+        auto equals = previous();
+        auto value = assignment();
 
-        if(auto*  var_expr = dynamic_cast<Variable_Expr*>(expr))
+        try {
+            auto& var_expr = dynamic_cast<Variable_Expr&>(*expr);
+            auto name = make_unique<Token>(*var_expr.name);
+            return make_unique<Assignment_Expr>(move(name), move(value));
+
+        } catch(bad_cast&) {
+            try {
+                auto& get_expr = dynamic_cast<Get_Expr&>(*expr);
+                return make_unique<Set_Expr>(move(get_expr.object), move(get_expr.name),
+                                             move(value));
+            } catch(bad_cast&) {
+                error(*equals, "Invalid assignment target.");
+            }
+
+        }
+
+        /*if(auto var_expr = dynamic_cast<Variable_Expr&>(*expr))
         {
             auto* name = new Token(*(var_expr->name));
             return new Assignment_Expr(name, value);
@@ -274,7 +291,7 @@ Expr *parser::assignment()
             return new Set_Expr(get_expr->object, get_expr->name, value);
         }
 
-        error(*equals, "Invalid assignment target.");
+        error(*equals, "Invalid assignment target.");*/
     }
 
     return expr;

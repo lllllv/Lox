@@ -7,6 +7,7 @@
 
 #include <vector>
 #include <exception>
+#include <memory>
 #include "token.h"
 #include "AST.h"
 #include "interpreter_exceptions.h"
@@ -15,23 +16,23 @@
 
 class parser {
 public:
-    explicit parser(vector<Token>&& t);
+    explicit parser(unique_ptr<vector<unique_ptr<Token>>> tokens);
 
-    vector<Stmt*> parse();
+    unique_ptr<vector<Stmt*>> parse();
 
 private:
-    vector<Token> tokens;
+    unique_ptr<vector<unique_ptr<Token>>> tokens;
     int current;
 
-    Expr* expression();
-    Expr* assignment();
-    Expr* equality();
+    unique_ptr<Expr> expression();
+    unique_ptr<Expr> assignment();
+    unique_ptr<Expr> equality();
     Expr* comparison();
     Expr* term();
     Expr* factor();
     Expr* unary();
     Expr* primary();
-    Expr* logical_or();
+    unique_ptr<Expr> logical_or();
     Expr* logical_and();
     Expr* call();
     Expr* finish_call(Expr* callee);
@@ -52,11 +53,11 @@ private:
 
     bool match(TokenType t);
     bool check(TokenType t);
-    Token* peek();
-    Token* previous();
+    unique_ptr<Token> peek();
+    unique_ptr<Token> previous();
     bool is_end();
-    Token* eat();
-    Token* consume(TokenType t, const string& msg);
+    unique_ptr<Token> eat();
+    unique_ptr<Token> consume(TokenType t, const string& msg);
     void synchronize();
 
 

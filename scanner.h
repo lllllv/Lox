@@ -3,6 +3,7 @@
 #include <vector>
 #include <iostream>
 #include <map>
+#include <memory>
 
 #include "token.h"
 
@@ -13,14 +14,14 @@ class scanner
 private:
 	string& code;
 	int start, end, current, line;
-	// unique_ptr ?
-	vector<Token> tokens;
+
+	unique_ptr<vector<unique_ptr<Token>>> tokens;
 	map<string, Token> keyword_table;
 
-	bool is_end();
-	bool is_digit(char c);
-	bool is_alpha(char c);
-	bool is_aldigit(char c);
+	bool is_end() const;
+	static bool is_digit(char c);
+	static bool is_alpha(char c);
+	static bool is_aldigit(char c);
 	void scan_Token();
 	char eat();
 	char peek();
@@ -31,6 +32,5 @@ private:
 	void handle_identifier();
 public:
 	explicit scanner(string& code);
-	// unique_ptr?
-	vector<Token> scan_Tokens();
+	unique_ptr<vector<unique_ptr<Token>>> scan_Tokens();
 };
