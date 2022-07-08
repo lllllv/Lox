@@ -24,6 +24,7 @@ public:
 
 class lox_function : public lox_callable {
 private:
+    // declaration should never be modified once created. consider marking as const?
     Function_Stmt* declaration;
     environment* closure;
     bool is_initializer;
