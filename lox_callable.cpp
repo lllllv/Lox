@@ -41,9 +41,10 @@ lox_function::lox_function(Function_Stmt *declaration, environment *closure, boo
 
 }
 
+// bind : unique_ptr? the returned value is never shared
 lox_function *lox_function::bind(lox_instance *instance)
 {
-    auto* new_env = new environment(closure);
+    auto* new_env = new environment(closure); // shared ptr?
     new_env->define("this", instance);
     return new lox_function(this->declaration, new_env, is_initializer);
 }
