@@ -5,7 +5,7 @@
 #include "lox_instance.h"
 #include "lox_class.h"
 
-string lox_instance::to_string()
+string lox_instance::to_string() const
 {
     return c->name + " instance";
 }
@@ -25,4 +25,9 @@ lox_object *lox_instance::get(Token *name)
 void lox_instance::set(Token *name, lox_object *value)
 {
     fields[name->lexeme] = value;
+}
+
+lox_instance::lox_instance(const lox_class *c) : c(c)
+{
+
 }

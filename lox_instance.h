@@ -14,9 +14,9 @@ class lox_instance : public lox_object {
 private:
     unordered_map<string, lox_object*> fields;
 public:
-    const   lox_class* c;
-    explicit lox_instance(const lox_class* c) : c(c){};
-    string to_string();
+    const lox_class* c;
+    explicit lox_instance(const lox_class* c);
+    string to_string() const;
     lox_object* get(Token* name);
     void set(Token* name, lox_object* value);
 };

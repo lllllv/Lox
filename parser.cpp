@@ -5,9 +5,8 @@
 #include "parser.h"
 
 
-parser::parser(vector<Token> &&t) {
+parser::parser(vector<Token>& t) : tokens(t) {
     this->current = 0;
-    this->tokens = t;
 }
 
 bool parser::match(TokenType t) {
@@ -185,6 +184,8 @@ void parser::synchronize() {
             case PRINT:
             case RETURN:
                 return;
+            default:
+                break;
         }
 
         eat();

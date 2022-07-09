@@ -12,9 +12,10 @@ using namespace std;
 
 class lox_object {
 public:
-    double num;
+    double val;
     string str;
     bool boolean;
+
     TokenType type;
 
     lox_object();
@@ -25,7 +26,7 @@ public:
     explicit lox_object(string&& s);
     explicit lox_object(double num);
     explicit lox_object(bool boolean);
-    void print();
+    //void print() const;
 };
 
 

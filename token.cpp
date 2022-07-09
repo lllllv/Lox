@@ -5,7 +5,7 @@
 #include "token.h"
 #include <sstream>
 
-Token::Token(TokenType type, string lexeme,iteral it, int line):type(type), lexeme(lexeme), it(it), line(line)
+Token::Token(TokenType type, string lexeme, literal it, int line): type(type), lexeme(lexeme), it(it), line(line)
 {
 
 }
@@ -97,7 +97,7 @@ string Token::to_string()
             s = "AND";
             break;
         case CLASS:
-            s = "CLASS";
+            s = "_resolver_CLASS";
             break;
         case ELSE:
             s = "ELSE";

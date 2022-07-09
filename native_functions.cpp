@@ -18,6 +18,6 @@ int clock::arity()
 
 string clock::to_string()
 {
-    return "<native fn>";
+    return "<native fn: clock>";
 }
 

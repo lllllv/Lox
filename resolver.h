@@ -22,7 +22,7 @@ private:
 
     enum class_type {
         NONE_CLASS,
-        CLASS,
+        _resolver_CLASS,
         SUBCLASS
     };
 
@@ -41,7 +41,7 @@ private:
     void declare(Token* name);
     void define(Token* name);
 public:
-    explicit resolver(interpreter* i) : inter(i), current_function(FUNCTION), current_class(NONE_CLASS){};
+    explicit resolver(interpreter* i);
     void resolve(vector<Stmt*>* stmts);
     void resolve(Stmt* stmt);
     void resolve(Expr* expr);

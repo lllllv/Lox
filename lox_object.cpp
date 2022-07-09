@@ -13,7 +13,8 @@ lox_object::lox_object(string &&s) {
     type = STRING;
 }
 
-lox_object::lox_object(double num) : num(num) {
+lox_object::lox_object(double num) {
+    val = num;
     type = NUMBER;
 }
 
@@ -27,7 +28,8 @@ lox_object::lox_object(string &s) {
     type = STRING;
 }
 
-void lox_object::print()
+/*
+void lox_object::print() const
 {
     switch(this->type)
     {
@@ -41,12 +43,14 @@ void lox_object::print()
             cout << "FALSE";
             break;
         case NUMBER:
-            cout << this->num;
+            cout << this->l.val;
             break;
         case STRING:
-            cout << this->str;
+            cout << this->l.str;
+        default:
+
     }
-}
+}*/
 
 
 

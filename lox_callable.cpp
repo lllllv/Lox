@@ -16,12 +16,16 @@ lox_object *lox_function::call(interpreter& i, vector<lox_object *> &arguments)
         i._execute_Block(declaration->body, new_env);
     } catch (return_result_exception& r)
     {
+        delete new_env;
+
         if(is_initializer)
             return closure->get_at(0, "this");
         return r.value;
     }
 
     delete new_env;
+
+    //  return nil values for 'void' functions.
     return new lox_object();
 }
 
@@ -41,6 +45,7 @@ lox_function::lox_function(Function_Stmt *declaration, environment *closure, boo
 
 }
 
+// bind 'this' ptr to an actual lox instance
 lox_function *lox_function::bind(lox_instance *instance)
 {
     auto* new_env = new environment(closure);

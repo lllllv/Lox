@@ -47,7 +47,7 @@ void interpreter::Visit_Unary_Expr(Unary_Expr *u) {
         {
             lox_object* tmp = im_results.top();
             im_results.pop();
-            tmp->num = -tmp->num;
+            tmp->val = -tmp->val;
             im_results.push(tmp);
             break;
         }
@@ -84,7 +84,7 @@ bool interpreter::is_equal(const lox_object &l1, const lox_object &l2) {
         return false;
 
     if(l1.type == NUMBER)
-        return l1.num == l2.num;
+        return l1.val == l2.val;
     else if(l1.type == STRING)
         return l1.str == l2.str;
     else
@@ -104,32 +104,32 @@ void interpreter::Visit_Binary_Expr(Binary_Expr *b) {
     {
         case PLUS:
             if(lhs->type == NUMBER && rhs->type == NUMBER)
-                im_results.push(new lox_object((double)(lhs->num + rhs->num)));
+                im_results.push(new lox_object((double)(lhs->val + rhs->val)));
             if(lhs->type == STRING && rhs->type == STRING)
                 im_results.push(new lox_object(lhs->str + rhs->str));
             break;
         case MINUS:
-            im_results.push(new lox_object((double)(lhs->num - rhs->num)));
+            im_results.push(new lox_object((double)(lhs->val - rhs->val)));
             break;
         case STAR:
-            im_results.push(new lox_object((double)(lhs->num * rhs->num)));
+            im_results.push(new lox_object((double)(lhs->val * rhs->val)));
             break;
         case SLASH:
-            im_results.push(new lox_object((double)(lhs->num / rhs->num)));
+            im_results.push(new lox_object((double)(lhs->val / rhs->val)));
             break;
 
 
         case GREATER:
-            im_results.push(new lox_object(lhs->num > rhs->num));
+            im_results.push(new lox_object(lhs->val > rhs->val));
             break;
         case GREATER_EQUAL:
-            im_results.push(new lox_object(lhs->num >= rhs->num));
+            im_results.push(new lox_object(lhs->val >= rhs->val));
             break;
         case LESS:
-            im_results.push(new lox_object(lhs->num < rhs->num));
+            im_results.push(new lox_object(lhs->val < rhs->val));
             break;
         case LESS_EQUAL:
-            im_results.push(new lox_object(lhs->num <= rhs->num));
+            im_results.push(new lox_object(lhs->val <= rhs->val));
             break;
 
         case EQUAL_EQUAL:
@@ -138,7 +138,8 @@ void interpreter::Visit_Binary_Expr(Binary_Expr *b) {
         case BANG_EQUAL:
             im_results.push(new lox_object(!is_equal(*lhs, *rhs)));
             break;
-
+        default:
+            break;
     }
 }
 
@@ -156,7 +157,7 @@ void interpreter::_print_lox_object(lox_object* l) {
             switch(l->type)
             {
                 case NUMBER:
-                    cout << l->num;
+                    cout << l->val;
                     break;
                 case STRING:
                     cout << l->str;
@@ -234,7 +235,6 @@ void interpreter::Visit_Var_Stmt(Var_Stmt *v)
         val = im_results.top();
         im_results.pop();
     }
-    //val.print();
     env->define(v->name->lexeme, val);
 }
 
@@ -267,7 +267,7 @@ void interpreter::Visit_Block_Stmt(Block_Stmt * stmt)
 {
     auto new_env = new environment(this->env);
     _execute_Block(stmt->stmts, new_env);
-    //delete new_env;
+    delete new_env;
 }
 
 void interpreter::_execute_Block(vector<Stmt*>* stmts, environment* new_env)
@@ -356,22 +356,22 @@ void interpreter::Visit_Call_Expr(Call_Expr * expr)
     _evaluate(expr->callee);
     lox_object* callee = im_results.top();
     im_results.pop();
-    auto* arguments = new vector<lox_object*>();
+    vector<lox_object*> arguments;
     for(auto* argument : *expr->arguments)
     {
         _evaluate(argument);
-        arguments->push_back(im_results.top());
+        arguments.push_back(im_results.top());
         im_results.pop();
     }
 
     if(auto* function = dynamic_cast<lox_callable*>(callee))
     {
-        if(function->arity() == arguments->size())
-            im_results.push(function->call(*this, *arguments));
+        if(function->arity() == arguments.size())
+            im_results.push(function->call(*this, arguments));
         else
             throw  interpreter_runtime_error(expr->paren, "Expected " +
                                                to_string(function->arity()) + " arguments but got " +
-                                               to_string(arguments->size()) + ".");
+                                               to_string(arguments.size()) + ".");
     }
     else
         throw interpreter_runtime_error(expr->paren,

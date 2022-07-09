@@ -37,7 +37,9 @@ void resolver::begin_scope()
 
 void resolver::end_scope()
 {
+    auto* tmp = scopes.back();
     scopes.pop_back();
+    delete tmp;
 }
 
 void resolver::Visit_Var_Stmt(Var_Stmt* stmt)
@@ -207,7 +209,7 @@ void resolver::Visit_Unary_Expr(Unary_Expr * expr)
 void resolver::Visit_Class_Stmt(Class_Stmt * stmt)
 {
     class_type enclosing_class = current_class;
-    current_class = CLASS;
+    current_class = _resolver_CLASS;
     declare(stmt->name);
     define(stmt->name);
 
@@ -269,6 +271,11 @@ void resolver::Visit_Super_Expr(Super_Expr * expr)
     else if(current_class != SUBCLASS)
         error(*expr->keyword, "Can't use 'super' in a class with no superclass.");
     resolve_local(expr, expr->keyword);
+}
+
+resolver::resolver(interpreter *i) : inter(i), current_function(FUNCTION), current_class(NONE_CLASS)
+{
+
 }
 
 

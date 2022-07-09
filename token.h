@@ -30,7 +30,7 @@ enum TokenType {
     ENDOFFILE
 };
 
-struct iteral
+struct literal
 {
     bool boolean;
     double val;
@@ -42,10 +42,10 @@ class Token
 public:
     TokenType type;
     string lexeme;
-    iteral it;
+    literal it;
     int line;
 
-    Token(TokenType type, string lexeme, iteral it, int line);
+    Token(TokenType type, string lexeme, literal it, int line);
     Token(const Token& t) = default;
     string to_string();
     void update_line(int l);

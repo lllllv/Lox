@@ -12,15 +12,14 @@
 #include "interpreter_exceptions.h"
 
 
-
 class parser {
 public:
-    explicit parser(vector<Token>&& t);
+    explicit parser(vector<Token>& t);
 
     vector<Stmt*> parse();
 
 private:
-    vector<Token> tokens;
+    vector<Token>& tokens;
     int current;
 
     Expr* expression();
@@ -62,7 +61,7 @@ private:
 
     static void report(int line, const string& where, const string& msg);
     static void error(const Token& t, const string& msg);
-    parse_error report_error(const Token& t, const string& msg);
+    static parse_error report_error(const Token& t, const string& msg);
 };
 
 
