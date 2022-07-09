@@ -45,7 +45,7 @@ lox_function::lox_function(Function_Stmt *declaration, environment *closure, boo
 
 }
 
-// bind 'this' ptr to an actual lox instance
+// bind : unique_ptr? the returned value is never shared
 lox_function *lox_function::bind(lox_instance *instance)
 {
     auto* new_env = new environment(closure);
