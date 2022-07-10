@@ -15,7 +15,7 @@ private:
 	string& code;
 	int start, end, current, line;
 
-	unique_ptr<vector<unique_ptr<Token>>> tokens;
+	vector<shared_ptr<Token>> tokens;
 	map<string, Token> keyword_table;
 
 	bool is_end() const;
@@ -32,5 +32,5 @@ private:
 	void handle_identifier();
 public:
 	explicit scanner(string& code);
-	unique_ptr<vector<unique_ptr<Token>>> scan_Tokens();
+	vector<shared_ptr<Token>> scan_Tokens();
 };

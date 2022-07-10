@@ -13,15 +13,15 @@ class lox_instance;
 
 using namespace std;
 
-class lox_class : public lox_callable {
+class lox_class : public lox_callable, enable_shared_from_this<lox_class> {
 public:
     string name;
-    lox_class* super_class;
-    unordered_map<string, lox_function*>* methods;
-    lox_class(string  name,lox_class* super_class, unordered_map<string, lox_function*>* methods);
+    shared_ptr<lox_class> super_class;
+    shared_ptr<unordered_map<string, shared_ptr<lox_function>>> methods;
+    lox_class(string  name,shared_ptr<lox_class> super_class, shared_ptr<unordered_map<string, shared_ptr<lox_function>>> methods);
     string to_string() override;
-    lox_object* call(interpreter& i, vector<lox_object*>& arguments) override;
-    lox_function* find_method(const string& str) const;
+    shared_ptr<lox_object> call(interpreter& i, vector<shared_ptr<lox_object>>& arguments) override;
+    shared_ptr<lox_function> find_method(const string& str) const;
     int arity() override;
 };
 

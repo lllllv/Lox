@@ -4,25 +4,27 @@
 
 #include "interpreter.h"
 
+#include <utility>
 
-void interpreter::Visit_Literal_Expr(Literal_Expr *l) {
+
+void interpreter::Visit_Literal_Expr(shared_ptr<Literal_Expr> l) {
 
     switch(l->t->type)
     {
         case NUMBER:
-            this->im_results.push(new lox_object(l->t->it.val));
+            this->im_results.push(make_shared<lox_object>(l->t->it.val));
             break;
         case STRING:
-            this->im_results.push(new lox_object(l->t->it.str));
+            this->im_results.push(make_shared<lox_object>(l->t->it.str));
             break;
         case NIL:
-            this->im_results.push(new lox_object());
+            this->im_results.push(make_shared<lox_object>());
             break;
         case TRUE:
-            this->im_results.push(new lox_object(true));
+            this->im_results.push(make_shared<lox_object>(true));
             break;
         case FALSE:
-            this->im_results.push(new lox_object(false));
+            this->im_results.push(make_shared<lox_object>(false));
             break;
         default:
             cout << "Unexpected Literal value!" << endl;
@@ -30,22 +32,22 @@ void interpreter::Visit_Literal_Expr(Literal_Expr *l) {
     }
 }
 
-void interpreter::Visit_Grouping_Expr(Grouping_Expr *g) {
+void interpreter::Visit_Grouping_Expr(shared_ptr<Grouping_Expr> g) {
     _evaluate(g->exp);
 }
 
-void interpreter::_evaluate(Expr *exp) {
+void interpreter::_evaluate(const shared_ptr<Expr>& exp) {
     exp->accept(this);
 }
 
-void interpreter::Visit_Unary_Expr(Unary_Expr *u) {
+void interpreter::Visit_Unary_Expr(shared_ptr<Unary_Expr> u) {
     _evaluate(u->operand);
 
     switch(u->op->type)
     {
         case MINUS:
         {
-            lox_object* tmp = im_results.top();
+            auto tmp = im_results.top();
             im_results.pop();
             tmp->num = -tmp->num;
             im_results.push(tmp);
@@ -53,9 +55,9 @@ void interpreter::Visit_Unary_Expr(Unary_Expr *u) {
         }
         case BANG:
         {
-            lox_object* tmp = im_results.top();
+            auto tmp = im_results.top();
             im_results.pop();
-            im_results.push(new lox_object(is_truthy(*tmp)));
+            im_results.push(make_shared<lox_object>(is_truthy(*tmp)));
             break;
         }
         default:
@@ -91,63 +93,64 @@ bool interpreter::is_equal(const lox_object &l1, const lox_object &l2) {
         return l1.boolean == l2.boolean;
 }
 
-void interpreter::Visit_Binary_Expr(Binary_Expr *b) {
+void interpreter::Visit_Binary_Expr(shared_ptr<Binary_Expr> b) {
     _evaluate(b->lhs);
     _evaluate(b->rhs);
 
-    lox_object* rhs = im_results.top();
+    auto rhs = im_results.top();
     im_results.pop();
-    lox_object* lhs = im_results.top();
+    auto lhs = im_results.top();
     im_results.pop();
 
     switch(b->op->type)
     {
         case PLUS:
             if(lhs->type == NUMBER && rhs->type == NUMBER)
-                im_results.push(new lox_object((double)(lhs->num + rhs->num)));
+                im_results.push(make_shared<lox_object>((double)(lhs->num + rhs->num)));
             if(lhs->type == STRING && rhs->type == STRING)
-                im_results.push(new lox_object(lhs->str + rhs->str));
+                im_results.push(make_shared<lox_object>(lhs->str + rhs->str));
             break;
         case MINUS:
-            im_results.push(new lox_object((double)(lhs->num - rhs->num)));
+            im_results.push(make_shared<lox_object>((double)(lhs->num - rhs->num)));
             break;
         case STAR:
-            im_results.push(new lox_object((double)(lhs->num * rhs->num)));
+            im_results.push(make_shared<lox_object>((double)(lhs->num * rhs->num)));
             break;
         case SLASH:
-            im_results.push(new lox_object((double)(lhs->num / rhs->num)));
+            im_results.push(make_shared<lox_object>((double)(lhs->num / rhs->num)));
             break;
 
 
         case GREATER:
-            im_results.push(new lox_object(lhs->num > rhs->num));
+            im_results.push(make_shared<lox_object>(lhs->num > rhs->num));
             break;
         case GREATER_EQUAL:
-            im_results.push(new lox_object(lhs->num >= rhs->num));
+            im_results.push(make_shared<lox_object>(lhs->num >= rhs->num));
             break;
         case LESS:
-            im_results.push(new lox_object(lhs->num < rhs->num));
+            im_results.push(make_shared<lox_object>(lhs->num < rhs->num));
             break;
         case LESS_EQUAL:
-            im_results.push(new lox_object(lhs->num <= rhs->num));
+            im_results.push(make_shared<lox_object>(lhs->num <= rhs->num));
             break;
 
         case EQUAL_EQUAL:
-            im_results.push(new lox_object(is_equal(*lhs, *rhs)));
+            im_results.push(make_shared<lox_object>(is_equal(*lhs, *rhs)));
             break;
         case BANG_EQUAL:
-            im_results.push(new lox_object(!is_equal(*lhs, *rhs)));
+            im_results.push(make_shared<lox_object>(!is_equal(*lhs, *rhs)));
             break;
-
+        default:
+            break;
     }
 }
 
-void interpreter::_print_lox_object(lox_object* l) {
-    if(auto* tmp = dynamic_cast<lox_callable*>(l))
+void interpreter::_print_lox_object(const shared_ptr<lox_object>& l) {
+    if(auto tmp = dynamic_pointer_cast<lox_callable>(l))
         cout << tmp->to_string();
     else
     {
-        if(auto* instance = dynamic_cast<lox_instance*>(l))
+        if(auto instance = dynamic_pointer_cast<lox_instance>(l))
         {
             cout << instance->to_string();
         }
@@ -182,52 +185,49 @@ void interpreter::_print_lox_object(lox_object* l) {
 
 }
 
-void interpreter::eval(Expr* expr) {
+void interpreter::eval(const shared_ptr<Expr>& expr) {
     _evaluate(expr);
-    lox_object* res = im_results.top();
+    auto res = im_results.top();
     im_results.pop();
     _print_lox_object(res);
-    //delete res;
 }
 
 // Expression_Stmt like :  "a = 2;"  no need to pop???
 // Expression_Stmt like : "1+1;" need to pop; ?????
-void interpreter::Visit_Expression_Stmt(Expression_Stmt * expression) {
+void interpreter::Visit_Expression_Stmt(shared_ptr<Expression_Stmt> expression) {
     _evaluate(expression->expr);
     im_results.pop();
     //im_results.top().print();
 }
 
-void interpreter::Visit_Print_Stmt(Print_Stmt *p) {
+void interpreter::Visit_Print_Stmt(shared_ptr<Print_Stmt> p) {
     _evaluate(p->expr);
-    lox_object* tmp = im_results.top();
+    auto tmp = im_results.top();
     im_results.pop();
     _print_lox_object(tmp);
     cout << endl;
 }
 
-void interpreter::interpret(const vector<Stmt *>& stmts)
+void interpreter::interpret(const vector<shared_ptr<Stmt>>& stmts)
 {
     try {
-        for(auto* stmt : stmts)
+        for(const auto& stmt : stmts)
             _execute(stmt);
     } catch(interpreter_runtime_error& r)
     {
         cout << r.what() << endl;
         cout << "Terminated." << endl;
     }
-
-
 }
 
-void interpreter::_execute(Stmt *stmt)
+void interpreter::_execute(const shared_ptr<Stmt>& stmt)
 {
     stmt->accept(this);
 }
 
-void interpreter::Visit_Var_Stmt(Var_Stmt *v)
+void interpreter::Visit_Var_Stmt(shared_ptr<Var_Stmt> v)
 {
-    auto* val = new lox_object();
+    auto val = make_shared<lox_object>();
     if(v->initializer != nullptr)
     {
         _evaluate(v->initializer);
@@ -238,7 +238,7 @@ void interpreter::Visit_Var_Stmt(Var_Stmt *v)
     env->define(v->name->lexeme, val);
 }
 
-void interpreter::Visit_Variable_Expr(Variable_Expr *expr)
+void interpreter::Visit_Variable_Expr(shared_ptr<Variable_Expr> expr)
 {
     //im_results.push(env->get(*expr->name));
     im_results.push(lookup_variable(expr->name, expr));
@@ -246,15 +246,15 @@ void interpreter::Visit_Variable_Expr(Variable_Expr *expr)
 
 //  evaluate an Assignment_Expr produces
 //  the evaluation result of the corresponding expression
-void interpreter::Visit_Assignment_Expr(Assignment_Expr *expr)
+void interpreter::Visit_Assignment_Expr(shared_ptr<Assignment_Expr> expr)
 {
     _evaluate(expr->expr);
-    lox_object* l = im_results.top();
+    auto l = im_results.top();
     // env->assign(*expr->name, l);
 
     if(locals.find(expr) != locals.end())
     {
-        int dist = locals[expr];
+        size_t dist = locals[expr];
         env->assign_at(dist, *expr->name, l);
     }
     else
@@ -263,19 +263,19 @@ void interpreter::Visit_Assignment_Expr(Assignment_Expr *expr)
 
 }
 
-void interpreter::Visit_Block_Stmt(Block_Stmt * stmt)
+void interpreter::Visit_Block_Stmt(shared_ptr<Block_Stmt> stmt)
 {
-    auto new_env = new environment(this->env);
+    auto new_env = make_shared<environment>(this->env);
     _execute_Block(stmt->stmts, new_env);
     //delete new_env;
 }
 
-void interpreter::_execute_Block(vector<Stmt*>* stmts, environment* new_env)
+void interpreter::_execute_Block(const shared_ptr<vector<shared_ptr<Stmt>>>& stmts, shared_ptr<environment> new_env)
 {
-    environment* previous = this->env;
+    auto previous = this->env;
     try {
-        this->env = new_env;
-        for(auto* stmt : *stmts)
+        this->env = move(new_env);
+        for(const auto& stmt : *stmts)
             _execute(stmt);
     } catch(interpreter_runtime_error& e) {
         cout << e.what() << endl;
@@ -294,12 +294,12 @@ void interpreter::_execute_Block(vector<Stmt*>* stmts, environment* new_env)
 
 interpreter::interpreter()
 {
-    this->globals = new environment();
-    this->globals->define("clock", new class clock());
+    this->globals = make_shared<environment>();
+    this->globals->define("native_clock", make_shared<native_clock>());
     this->env = globals;
 }
 
-void interpreter::Visit_If_Stmt(If_Stmt * if_stmt)
+void interpreter::Visit_If_Stmt(shared_ptr<If_Stmt> if_stmt)
 {
     /*_evaluate(if_stmt->condition);
     lox_object tmp = im_results.top();
@@ -311,10 +311,10 @@ void interpreter::Visit_If_Stmt(If_Stmt * if_stmt)
         _execute(if_stmt->else_branch);
 }
 
-void interpreter::Visit_Logical_Expr(Logical_Expr * expr)
+void interpreter::Visit_Logical_Expr(shared_ptr<Logical_Expr> expr)
 {
     _evaluate(expr->left);
-    lox_object* tmp_l = im_results.top();
+    auto tmp_l = im_results.top();
     im_results.pop();
 
     if(expr->op->type == OR)
@@ -337,34 +337,34 @@ void interpreter::Visit_Logical_Expr(Logical_Expr * expr)
     _evaluate(expr->right);
 }
 
-void interpreter::Visit_While_Stmt(While_Stmt *stmt)
+void interpreter::Visit_While_Stmt(shared_ptr<While_Stmt> stmt)
 {
     while(_evaluate_cond(stmt->condition))
         _execute(stmt->body);
 }
 
-bool interpreter::_evaluate_cond(Expr *expr)
+bool interpreter::_evaluate_cond(const shared_ptr<Expr>& expr)
 {
     _evaluate(expr);
-    lox_object* tmp = im_results.top();
+    auto tmp = im_results.top();
     im_results.pop();
     return is_truthy(*tmp);
 }
 
-void interpreter::Visit_Call_Expr(Call_Expr * expr)
+void interpreter::Visit_Call_Expr(shared_ptr<Call_Expr> expr)
 {
     _evaluate(expr->callee);
-    lox_object* callee = im_results.top();
+    auto callee = im_results.top();
     im_results.pop();
-    auto* arguments = new vector<lox_object*>();
-    for(auto* argument : *expr->arguments)
+    auto arguments = make_shared<vector<shared_ptr<lox_object>>>();
+    for(const auto& argument : *expr->arguments)
     {
         _evaluate(argument);
         arguments->push_back(im_results.top());
         im_results.pop();
     }
 
-    if(auto* function = dynamic_cast<lox_callable*>(callee))
+    if(auto function = dynamic_pointer_cast<lox_callable>(callee))
     {
         if(function->arity() == arguments->size())
             im_results.push(function->call(*this, *arguments));
@@ -378,15 +378,15 @@ void interpreter::Visit_Call_Expr(Call_Expr * expr)
                                "Can only call functions and classes.");
 }
 
-void interpreter::Visit_Function_Stmt(Function_Stmt *stmt)
+void interpreter::Visit_Function_Stmt(shared_ptr<Function_Stmt> stmt)
 {
-    auto* fun = new lox_function(stmt, env, false);
+    auto fun = make_shared<lox_function>(stmt, env, false);
     env->define(stmt->name->lexeme, fun);
 }
 
-void interpreter::Visit_Return_Stmt(Return_Stmt* stmt)
+void interpreter::Visit_Return_Stmt(shared_ptr<Return_Stmt> stmt)
 {
-    lox_object* value;
+    shared_ptr<lox_object> value;
     if(stmt->value != nullptr)
     {
         _evaluate(stmt->value);
@@ -394,30 +394,30 @@ void interpreter::Visit_Return_Stmt(Return_Stmt* stmt)
         im_results.pop();
     }
     else
-        value = new lox_object();
+        value = make_shared<lox_object>();
     throw return_control_flow_exception("using exception to clear call stack and return a value", value);
 }
 
-void interpreter::resolve(Expr *expr, int depth)
+void interpreter::resolve(const shared_ptr<Expr>& expr, size_t depth)
 {
     locals[expr] = depth;
 }
 
-lox_object *interpreter::lookup_variable(Token *name, Expr *expr)
+shared_ptr<lox_object> interpreter::lookup_variable(const shared_ptr<Token>& name, const shared_ptr<Expr>& expr)
 {
     if(locals.find(expr) != locals.end())
     {
-        int dist = locals[expr];
+        size_t dist = locals[expr];
         return env->get_at(dist, name);
     }
     else
         return globals->get(*name);
 }
 
-void interpreter::Visit_Class_Stmt(Class_Stmt * stmt)
+void interpreter::Visit_Class_Stmt(shared_ptr<Class_Stmt> stmt)
 {
-    lox_object* tmp;
-    lox_class* super_class = nullptr;
+    shared_ptr<lox_object> tmp;
+    shared_ptr<lox_class> super_class = nullptr;
 
     if(stmt->super_class != nullptr)
     {
@@ -425,7 +425,7 @@ void interpreter::Visit_Class_Stmt(Class_Stmt * stmt)
         tmp = im_results.top();
         im_results.pop();
 
-        super_class = dynamic_cast<lox_class*>(tmp);
+        super_class = dynamic_pointer_cast<lox_class>(tmp);
         if(super_class == nullptr)
             throw interpreter_runtime_error(stmt->super_class->name, "Superclass must be a class.");
     }
@@ -434,17 +434,17 @@ void interpreter::Visit_Class_Stmt(Class_Stmt * stmt)
 
     if(stmt->super_class != nullptr)
     {
-        env = new environment(env);
+        env = make_shared<environment>(env);
         env->define("super", super_class);
     }
 
-    auto* methods = new unordered_map<string, lox_function*>();
-    for(auto* method : *stmt->methods)
+    auto methods = make_shared<unordered_map<string, shared_ptr<lox_function>>>();
+    for(const auto& method : *stmt->methods)
     {
-        auto* function = new lox_function(method, this->env, method->name->lexeme == "init");
+        auto function = make_shared<lox_function>(method, this->env, method->name->lexeme == "init");
         (*methods)[method->name->lexeme] = function;
     }
-    auto* new_lox_class = new lox_class(stmt->name->lexeme, super_class, methods);
+    auto new_lox_class = make_shared<lox_class>(stmt->name->lexeme, super_class, methods);
 
     if(stmt->super_class != nullptr)
         env = env->enclosing;
@@ -452,27 +452,27 @@ void interpreter::Visit_Class_Stmt(Class_Stmt * stmt)
     env->assign(*stmt->name, new_lox_class);
 }
 
-void interpreter::Visit_Get_Expr(Get_Expr* expr)
+void interpreter::Visit_Get_Expr(shared_ptr<Get_Expr> expr)
 {
     _evaluate(expr->object);
-    auto* tmp = im_results.top();
+    auto tmp = im_results.top();
     im_results.pop();
-    if(auto* instance = dynamic_cast<lox_instance*>(tmp))
+    if(auto instance = dynamic_pointer_cast<lox_instance>(tmp))
         im_results.push(instance->get(expr->name));
     else
         throw  interpreter_runtime_error(expr->name, "Only instances have properties.");
 }
 
-void interpreter::Visit_Set_Expr(Set_Expr * expr)
+void interpreter::Visit_Set_Expr(shared_ptr<Set_Expr> expr)
 {
     _evaluate(expr->object);
-    auto* obj = im_results.top();
+    auto obj = im_results.top();
     im_results.pop();
 
-    if(auto* object = dynamic_cast<lox_instance*>(obj))
+    if(auto object = dynamic_pointer_cast<lox_instance>(obj))
     {
         _evaluate(expr->value);
-        auto* value = im_results.top();
+        auto value = im_results.top();
 
         object->set(expr->name, value);
     }
@@ -480,17 +480,17 @@ void interpreter::Visit_Set_Expr(Set_Expr * expr)
         throw interpreter_runtime_error(expr->name, "Only instances have fields.");
 }
 
-void interpreter::Visit_This_Expr(This_Expr * expr)
+void interpreter::Visit_This_Expr(shared_ptr<This_Expr> expr)
 {
     im_results.push(lookup_variable(expr->keyword, expr));
 }
 
-void interpreter::Visit_Super_Expr(Super_Expr* expr)
+void interpreter::Visit_Super_Expr(shared_ptr<Super_Expr> expr)
 {
-    int dist = locals[expr];
-    lox_class* super_class = dynamic_cast<lox_class*>(env->get_at(dist, "super"));
-    lox_instance* instance = dynamic_cast<lox_instance*>(env->get_at(dist - 1, "this"));
-    auto* method = super_class->find_method(expr->method->lexeme);
+    size_t dist = locals[expr];
+    auto super_class = dynamic_pointer_cast<lox_class>(env->get_at(dist, "super"));
+    auto instance = dynamic_pointer_cast<lox_instance>(env->get_at(dist - 1, "this"));
+    auto method = super_class->find_method(expr->method->lexeme);
     if(method == nullptr)
         throw interpreter_runtime_error(expr->method, "Undefined property '" + expr->method->lexeme + "'.");
     im_results.push(method->bind(instance));

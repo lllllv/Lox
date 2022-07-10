@@ -45,15 +45,15 @@ void Lox::run_code(string code)
 {
 	scanner s(code);
 
-	vector<Token> tokens = s.scan_Tokens();
+	auto tokens = s.scan_Tokens();
     cout << "*****************Scanner*****************" << endl;
 	cout << tokens.size() << " tokens." << endl;
-	for (auto i : tokens)
-		cout << i.to_string() << endl;
+	for (const auto& i : tokens)
+		cout << i->to_string() << endl;
     cout << endl;
     cout << "*****************Parser*****************" << endl;
     parser p(move(tokens));
-    vector<Stmt*> stmts = p.parse();
+    auto stmts = p.parse();
 
     //AST_Printer printer;
     //printer.print(stmts);
@@ -61,8 +61,8 @@ void Lox::run_code(string code)
     cout << "*****************Interpreter*****************" << endl;
 
     interpreter i;
-    resolver r(&i);
-    r.resolve(&stmts);
+    resolver r(i);
+    r.resolve(stmts);
     if(!had_error)
         i.interpret(stmts);
 
@@ -71,7 +71,7 @@ void Lox::run_code(string code)
 Lox::Lox(int argc, char** argv)
 {
     had_error = false;
-	/*if (argc > 2)
+	if (argc > 2)
 	{
 		cout << "Usage: lox [script]" << endl;
 		exit(0);
@@ -84,6 +84,6 @@ Lox::Lox(int argc, char** argv)
 	else
 	{
 		run_promt();
-	}*/
-	run_file("test.txt");
+	}
+	//run_file("test.txt");
 }

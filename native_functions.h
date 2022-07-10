@@ -11,11 +11,11 @@ using std::chrono::duration_cast;
 using std::chrono::milliseconds;
 using std::chrono::seconds;
 using std::chrono::system_clock;
-class clock : public lox_callable
+class native_clock : public lox_callable
 {
 public:
     int arity() override;
-    lox_object* call(interpreter& i, vector<lox_object*>& arguments) override;
+    shared_ptr<lox_object> call(interpreter& i, vector<shared_ptr<lox_object>>& arguments) override;
     string to_string() override;
 };
 

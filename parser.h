@@ -16,54 +16,54 @@
 
 class parser {
 public:
-    explicit parser(unique_ptr<vector<unique_ptr<Token>>> tokens);
+    explicit parser(vector<shared_ptr<Token>> tokens);
 
-    unique_ptr<vector<Stmt*>> parse();
+    vector<shared_ptr<Stmt>> parse();
 
 private:
-    unique_ptr<vector<unique_ptr<Token>>> tokens;
+    vector<shared_ptr<Token>> tokens;
     int current;
 
-    unique_ptr<Expr> expression();
-    unique_ptr<Expr> assignment();
-    unique_ptr<Expr> equality();
-    Expr* comparison();
-    Expr* term();
-    Expr* factor();
-    Expr* unary();
-    Expr* primary();
-    unique_ptr<Expr> logical_or();
-    Expr* logical_and();
-    Expr* call();
-    Expr* finish_call(Expr* callee);
+    shared_ptr<Expr> expression();
+    shared_ptr<Expr> assignment();
+    shared_ptr<Expr> equality();
+    shared_ptr<Expr> comparison();
+    shared_ptr<Expr> term();
+    shared_ptr<Expr> factor();
+    shared_ptr<Expr> unary();
+    shared_ptr<Expr> primary();
+    shared_ptr<Expr> logical_or();
+    shared_ptr<Expr> logical_and();
+    shared_ptr<Expr> call();
+    shared_ptr<Expr> finish_call(shared_ptr<Expr> callee);
 
-    Stmt* declaration();
-    Stmt* statement();
-    Stmt* print_stmt();
-    Stmt* expression_stmt();
-    Stmt* var_declaration();
-    vector<Stmt*>* block();
-    Stmt* if_stmt();
-    Stmt* while_stmt();
-    Stmt* for_stmt();
-    Function_Stmt* function(const string&);
-    Stmt* return_stmt();
-    Stmt* class_declaration();
+    shared_ptr<Stmt> declaration();
+    shared_ptr<Stmt> statement();
+    shared_ptr<Stmt> print_stmt();
+    shared_ptr<Stmt> expression_stmt();
+    shared_ptr<Stmt> var_declaration();
+    shared_ptr<vector<shared_ptr<Stmt>>> block();
+    shared_ptr<Stmt> if_stmt();
+    shared_ptr<Stmt> while_stmt();
+    shared_ptr<Stmt> for_stmt();
+    shared_ptr<Function_Stmt> function(const string&);
+    shared_ptr<Stmt> return_stmt();
+    shared_ptr<Stmt> class_declaration();
 
 
     bool match(TokenType t);
     bool check(TokenType t);
-    unique_ptr<Token> peek();
-    unique_ptr<Token> previous();
+    shared_ptr<Token> peek();
+    shared_ptr<Token> previous();
     bool is_end();
-    unique_ptr<Token> eat();
-    unique_ptr<Token> consume(TokenType t, const string& msg);
+    shared_ptr<Token> eat();
+    shared_ptr<Token> consume(TokenType t, const string& msg);
     void synchronize();
 
 
     static void report(int line, const string& where, const string& msg);
     static void error(const Token& t, const string& msg);
-    parse_error report_error(const Token& t, const string& msg);
+    static parse_error report_error(const Token& t, const string& msg);
 };
 
 

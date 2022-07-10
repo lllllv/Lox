@@ -25,100 +25,99 @@ class Expr : public AST_Node {
 public:
     Expr() = default;
     ~Expr() override = default;
-
 };
 
 class Literal_Expr : public Expr {
 public:
-    unique_ptr<Token> t;
-    explicit Literal_Expr(unique_ptr<Token> t);
+    shared_ptr<Token> t;
+    explicit Literal_Expr(shared_ptr<Token> t);
     void accept(Visitor* v) override;
 };
 
 class Unary_Expr : public Expr {
 public:
-    unique_ptr<Token> op;
-    unique_ptr<Expr> operand;
-    Unary_Expr(unique_ptr<Token> op, unique_ptr<Expr> operand);
+    shared_ptr<Token> op;
+    shared_ptr<Expr> operand;
+    Unary_Expr(shared_ptr<Token> op, shared_ptr<Expr> operand);
     void accept(Visitor* v) override;
 };
 
 class Binary_Expr : public Expr {
 public:
-    unique_ptr<Token> op;
-    unique_ptr<Expr> lhs;
-    unique_ptr<Expr> rhs;
-    Binary_Expr(unique_ptr<Token> op, unique_ptr<Expr> lhs, unique_ptr<Expr> rhs);
+    shared_ptr<Token> op;
+    shared_ptr<Expr> lhs;
+    shared_ptr<Expr> rhs;
+    Binary_Expr(shared_ptr<Token> op, shared_ptr<Expr> lhs, shared_ptr<Expr> rhs);
     void accept(Visitor* v) override;
 };
 
 class Grouping_Expr : public Expr {
 public:
-    unique_ptr<Expr> exp;
-    explicit Grouping_Expr(unique_ptr<Expr> exp);
+    shared_ptr<Expr> exp;
+    explicit Grouping_Expr(shared_ptr<Expr> exp);
     void accept(Visitor* v) override;
 };
 
 class Variable_Expr : public Expr {
 public:
-    unique_ptr<Token> name;
-    explicit Variable_Expr(unique_ptr<Token> t);
+    shared_ptr<Token> name;
+    explicit Variable_Expr(shared_ptr<Token> t);
     void accept(Visitor* v) override;
 };
 
 class Assignment_Expr : public Expr {
 public:
-    unique_ptr<Token> name;
-    unique_ptr<Expr> expr;
-    Assignment_Expr(unique_ptr<Token> name, unique_ptr<Expr> expr);
+    shared_ptr<Token> name;
+    shared_ptr<Expr> expr;
+    Assignment_Expr(shared_ptr<Token> name, shared_ptr<Expr> expr);
     void accept(Visitor* v) override;
 };
 
 class Logical_Expr : public Expr {
 public:
-    unique_ptr<Expr> left, right;
-    unique_ptr<Token> op;
-    Logical_Expr(unique_ptr<Expr> left, unique_ptr<Token> op, unique_ptr<Expr> right);
+    shared_ptr<Expr> left, right;
+    shared_ptr<Token> op;
+    Logical_Expr(shared_ptr<Expr> left, shared_ptr<Token> op, shared_ptr<Expr> right);
     void accept(Visitor* v) override;
 };
 
 class Call_Expr : public Expr {
 public:
-    unique_ptr<Expr> callee;
-    unique_ptr<Token> paren;
-    vector<Expr*>* arguments;
-    Call_Expr(unique_ptr<Expr> callee, unique_ptr<Token> paren, vector<Expr*>* arguments);
+    shared_ptr<Expr> callee;
+    shared_ptr<Token> paren;
+    shared_ptr<vector<shared_ptr<Expr>>> arguments;
+    Call_Expr(shared_ptr<Expr> callee, shared_ptr<Token> paren, shared_ptr<vector<shared_ptr<Expr>>> arguments);
     void accept(Visitor* v) override;
 };
 
 class Get_Expr : public Expr {
 public:
-    unique_ptr<Expr> object;
-    unique_ptr<Token> name;
-    Get_Expr(unique_ptr<Expr> object, unique_ptr<Token> name);
+    shared_ptr<Expr> object;
+    shared_ptr<Token> name;
+    Get_Expr(shared_ptr<Expr> object, shared_ptr<Token> name);
     void accept(Visitor* v) override;
 };
 
 class Set_Expr : public Expr {
 public:
-    unique_ptr<Expr> object;
-    unique_ptr<Token> name;
-    unique_ptr<Expr> value;
-    Set_Expr(unique_ptr<Expr> object, unique_ptr<Token> name, unique_ptr<Expr> value);
+    shared_ptr<Expr> object;
+    shared_ptr<Token> name;
+    shared_ptr<Expr> value;
+    Set_Expr(shared_ptr<Expr> object, shared_ptr<Token> name, shared_ptr<Expr> value);
     void accept(Visitor* v) override;
 };
 
 class This_Expr : public Expr {
 public:
-    unique_ptr<Token> keyword;
-    explicit This_Expr(unique_ptr<Token> keyword);
+    shared_ptr<Token> keyword;
+    explicit This_Expr(shared_ptr<Token> keyword);
     void accept(Visitor* v) override;
 };
 
 class Super_Expr : public Expr {
 public:
-    unique_ptr<Token> keyword, method;
-    Super_Expr(unique_ptr<Token> keyword, unique_ptr<Token> method);
+    shared_ptr<Token> keyword, method;
+    Super_Expr(shared_ptr<Token> keyword, shared_ptr<Token> method);
     void accept(Visitor* v) override;
 };
 
@@ -129,74 +128,74 @@ public:
     ~Stmt() override = default;
 };
 
-class Expression_Stmt : public Stmt {
+class Expression_Stmt : public Stmt{
 public:
-    unique_ptr<Expr> expr;
-    explicit Expression_Stmt(unique_ptr<Expr> expr);
+    shared_ptr<Expr> expr;
+    explicit Expression_Stmt(shared_ptr<Expr> expr);
     void accept(Visitor* v) override;
 };
 
 class Print_Stmt : public Stmt {
 public:
-    unique_ptr<Expr> expr;
-    explicit Print_Stmt(unique_ptr<Expr> expr);
+    shared_ptr<Expr> expr;
+    explicit Print_Stmt(shared_ptr<Expr> expr);
     void accept(Visitor* v) override;
 };
 
 class Var_Stmt : public Stmt {
 public:
-    unique_ptr<Token> name;
-    unique_ptr<Expr> initializer;
-    Var_Stmt(unique_ptr<Token> name, unique_ptr<Expr> initializer);
+    shared_ptr<Token> name;
+    shared_ptr<Expr> initializer;
+    Var_Stmt(shared_ptr<Token> name, shared_ptr<Expr> initializer);
     void accept(Visitor* v) override;
 };
 
 class Block_Stmt : public Stmt {
 public:
-    unique_ptr<vector<Stmt*>> stmts;
-    explicit Block_Stmt(unique_ptr<vector<Stmt*>> stmts);
+    shared_ptr<vector<shared_ptr<Stmt>>> stmts;
+    explicit Block_Stmt(shared_ptr<vector<shared_ptr<Stmt>>> stmts);
     void accept(Visitor* v) override;
 };
 
 class If_Stmt : public Stmt {
 public:
-    unique_ptr<Expr> condition;
-    unique_ptr<Stmt> then_branch, else_branch;
-    If_Stmt(unique_ptr<Expr> c, unique_ptr<Stmt> t, unique_ptr<Stmt> e);
+    shared_ptr<Expr> condition;
+    shared_ptr<Stmt> then_branch, else_branch;
+    If_Stmt(shared_ptr<Expr> c, shared_ptr<Stmt> t, shared_ptr<Stmt> e);
     void accept(Visitor* v) override;
 };
 
 class While_Stmt : public Stmt {
 public:
-    unique_ptr<Expr> condition;
-    unique_ptr<Stmt> body;
-    While_Stmt(unique_ptr<Expr> condition, unique_ptr<Stmt> body);
+    shared_ptr<Expr> condition;
+    shared_ptr<Stmt> body;
+    While_Stmt(shared_ptr<Expr> condition, shared_ptr<Stmt> body);
     void accept(Visitor* v) override;
 };
 
 class Function_Stmt : public Stmt {
 public:
-    unique_ptr<Token> name;
-    unique_ptr<vector<Token*>> params;
-    unique_ptr<vector<Stmt*>> body;
-    Function_Stmt(unique_ptr<Token> name, unique_ptr<vector<Token*>> params, unique_ptr<vector<Stmt*>> body);
+    shared_ptr<Token> name;
+    shared_ptr<vector<shared_ptr<Token>>> params;
+    shared_ptr<vector<shared_ptr<Stmt>>> body;
+    Function_Stmt(shared_ptr<Token> name, shared_ptr<vector<shared_ptr<Token>>> params, shared_ptr<vector<shared_ptr<Stmt>>> body);
     void accept(Visitor* v) override;
 };
 
 class Return_Stmt : public Stmt {
 public:
-    unique_ptr<Token> keyword;
-    unique_ptr<Expr> value;
-    Return_Stmt(unique_ptr<Token> keyword, unique_ptr<Expr> value);
+    shared_ptr<Token> keyword;
+    shared_ptr<Expr> value;
+    Return_Stmt(shared_ptr<Token> keyword, shared_ptr<Expr> value);
     void accept(Visitor* v) override;
 };
 
 class Class_Stmt : public Stmt {
 public:
-    unique_ptr<Token> name;
-    unique_ptr<Variable_Expr> super_class;
-    unique_ptr<vector<Function_Stmt*>> methods;
-    Class_Stmt(unique_ptr<Token> name, unique_ptr<Variable_Expr> super_class, unique_ptr<vector<Function_Stmt*>> methods);
+    shared_ptr<Token> name;
+    shared_ptr<Variable_Expr> super_class;
+    shared_ptr<vector<shared_ptr<Function_Stmt>>> methods;
+    Class_Stmt(shared_ptr<Token> name, shared_ptr<Variable_Expr> super_class, shared_ptr<vector<shared_ptr<Function_Stmt>>> methods);
     void accept(Visitor* v) override;
 };
 

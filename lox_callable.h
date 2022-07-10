@@ -17,20 +17,20 @@ class environment;
 class lox_callable : public lox_object {
 public:
     virtual int arity() = 0;
-    virtual lox_object* call(interpreter& i, vector<lox_object*>& arguments) = 0;
+    virtual shared_ptr<lox_object> call(interpreter& i, vector<shared_ptr<lox_object>>& arguments) = 0;
     virtual string to_string() = 0;
     ~lox_callable() override = default;
 };
 
 class lox_function : public lox_callable {
 private:
-    Function_Stmt* declaration;
-    environment* closure;
+    shared_ptr<Function_Stmt> declaration;
+    shared_ptr<environment> closure;
     bool is_initializer;
 public:
-    lox_function(Function_Stmt* declaration, environment* closure, bool is_initializer);
-    lox_function* bind(lox_instance* instance);
-    lox_object* call(interpreter& i, vector<lox_object*>& arguments) override;
+    lox_function(shared_ptr<Function_Stmt> declaration, shared_ptr<environment> closure, bool is_initializer);
+    shared_ptr<lox_function> bind(const shared_ptr<lox_instance>& instance);
+    shared_ptr<lox_object> call(interpreter& i, vector<shared_ptr<lox_object>>& arguments) override;
     int arity() override;
     string to_string() override;
 };

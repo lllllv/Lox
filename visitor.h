@@ -30,31 +30,33 @@ class Function_Stmt;
 class Return_Stmt;
 class Class_Stmt;
 
+using namespace std;
+
 class Visitor {
 public:
     virtual ~Visitor() = default;
-    virtual void Visit_Literal_Expr(Literal_Expr*) = 0;
-    virtual void Visit_Unary_Expr(Unary_Expr*) = 0;
-    virtual void Visit_Binary_Expr(Binary_Expr*) = 0;
-    virtual void Visit_Grouping_Expr(Grouping_Expr*) = 0;
-    virtual void Visit_Variable_Expr(Variable_Expr*) = 0;
-    virtual void Visit_Assignment_Expr(Assignment_Expr*) = 0;
-    virtual void Visit_Logical_Expr(Logical_Expr*) = 0;
-    virtual void Visit_Call_Expr(Call_Expr*) = 0;
-    virtual void Visit_Get_Expr(Get_Expr*) = 0;
-    virtual void Visit_Set_Expr(Set_Expr*) = 0;
-    virtual void Visit_This_Expr(This_Expr*) = 0;
-    virtual void Visit_Super_Expr(Super_Expr*) = 0;
+    virtual void Visit_Literal_Expr(shared_ptr<Literal_Expr>) = 0;
+    virtual void Visit_Unary_Expr(shared_ptr<Unary_Expr>) = 0;
+    virtual void Visit_Binary_Expr(shared_ptr<Binary_Expr>) = 0;
+    virtual void Visit_Grouping_Expr(shared_ptr<Grouping_Expr>) = 0;
+    virtual void Visit_Variable_Expr(shared_ptr<Variable_Expr>) = 0;
+    virtual void Visit_Assignment_Expr(shared_ptr<Assignment_Expr>) = 0;
+    virtual void Visit_Logical_Expr(shared_ptr<Logical_Expr>) = 0;
+    virtual void Visit_Call_Expr(shared_ptr<Call_Expr>) = 0;
+    virtual void Visit_Get_Expr(shared_ptr<Get_Expr>) = 0;
+    virtual void Visit_Set_Expr(shared_ptr<Set_Expr>) = 0;
+    virtual void Visit_This_Expr(shared_ptr<This_Expr>) = 0;
+    virtual void Visit_Super_Expr(shared_ptr<Super_Expr>) = 0;
 
-    virtual void Visit_Expression_Stmt(Expression_Stmt*) = 0;
-    virtual void Visit_Print_Stmt(Print_Stmt*) = 0;
-    virtual void Visit_Var_Stmt(Var_Stmt*) = 0;
-    virtual void Visit_Block_Stmt(Block_Stmt*) = 0;
-    virtual void Visit_If_Stmt(If_Stmt*) = 0;
-    virtual void Visit_While_Stmt(While_Stmt*) = 0;
-    virtual void Visit_Function_Stmt(Function_Stmt*) = 0;
-    virtual void Visit_Return_Stmt(Return_Stmt*) = 0;
-    virtual void Visit_Class_Stmt(Class_Stmt*) = 0;
+    virtual void Visit_Expression_Stmt(shared_ptr<Expression_Stmt>) = 0;
+    virtual void Visit_Print_Stmt(shared_ptr<Print_Stmt>) = 0;
+    virtual void Visit_Var_Stmt(shared_ptr<Var_Stmt>) = 0;
+    virtual void Visit_Block_Stmt(shared_ptr<Block_Stmt>) = 0;
+    virtual void Visit_If_Stmt(shared_ptr<If_Stmt>) = 0;
+    virtual void Visit_While_Stmt(shared_ptr<While_Stmt>) = 0;
+    virtual void Visit_Function_Stmt(shared_ptr<Function_Stmt>) = 0;
+    virtual void Visit_Return_Stmt(shared_ptr<Return_Stmt>) = 0;
+    virtual void Visit_Class_Stmt(shared_ptr<Class_Stmt>) = 0;
 };
 
 

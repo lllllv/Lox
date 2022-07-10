@@ -97,7 +97,7 @@ string Token::to_string()
             s = "AND";
             break;
         case CLASS:
-            s = "CLASS";
+            s = "CLASS_TYPE";
             break;
         case ELSE:
             s = "ELSE";

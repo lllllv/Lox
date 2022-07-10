@@ -4,66 +4,68 @@
 
 #include "AST.h"
 
+#include <utility>
+
 
 void Literal_Expr::accept(Visitor *v) {
-    v->Visit_Literal_Expr(this);
+    v->Visit_Literal_Expr(shared_from_this());
 }
 
-Literal_Expr::Literal_Expr(unique_ptr<Token> t) : t(move(t))
+Literal_Expr::Literal_Expr(shared_ptr<Token> t) : t(move(t))
 {
 
 }
 
 void Unary_Expr::accept(Visitor *v) {
-    v->Visit_Unary_Expr(this);
+    v->Visit_Unary_Expr(shared_from_this());
 }
 
-Unary_Expr::Unary_Expr(unique_ptr<Token> op, unique_ptr<Expr> operand) : op(move(op)), operand(move(operand))
+Unary_Expr::Unary_Expr(shared_ptr<Token> op, shared_ptr<Expr> operand) : op(move(op)), operand(std::move(operand))
 {
 
 }
 
 void Binary_Expr::accept(Visitor *v) {
-    v->Visit_Binary_Expr(this);
+    v->Visit_Binary_Expr(shared_from_this());
 }
 
-Binary_Expr::Binary_Expr(unique_ptr<Token> op, unique_ptr<Expr> lhs, unique_ptr<Expr> rhs)
+Binary_Expr::Binary_Expr(shared_ptr<Token> op, shared_ptr<Expr> lhs, shared_ptr<Expr> rhs)
                     : op(move(op)), lhs(move(lhs)), rhs(move(rhs))
 {
 
 }
 
 void Grouping_Expr::accept(Visitor *v) {
-    v->Visit_Grouping_Expr(this);
+    v->Visit_Grouping_Expr(shared_from_this());
 }
 
-Grouping_Expr::Grouping_Expr(unique_ptr<Expr> exp) : exp(move(exp))
+Grouping_Expr::Grouping_Expr(shared_ptr<Expr> exp) : exp(move(exp))
 {
 
 }
 
-Expression_Stmt::Expression_Stmt(unique_ptr<Expr> expr) : expr(move(expr))
+Expression_Stmt::Expression_Stmt(shared_ptr<Expr> expr) : expr(move(expr))
 {
 
 }
 
 void Expression_Stmt::accept(Visitor *v)
 {
-    v->Visit_Expression_Stmt(this);
+    v->Visit_Expression_Stmt(dynamic_pointer_cast<Expression_Stmt>(AST_Node::shared_from_this()));
 }
 
 
-Print_Stmt::Print_Stmt(unique_ptr<Expr> expr) : expr(move(expr))
+Print_Stmt::Print_Stmt(shared_ptr<Expr> expr) : expr(move(expr))
 {
 
 }
 
 void Print_Stmt::accept(Visitor *v)
 {
-    v->Visit_Print_Stmt(this);
+    v->Visit_Print_Stmt(shared_from_this());
 }
 
-Var_Stmt::Var_Stmt(unique_ptr<Token> name, unique_ptr<Expr> initializer)
+Var_Stmt::Var_Stmt(shared_ptr<Token> name, shared_ptr<Expr> initializer)
                     : name(move(name)), initializer(move(initializer))
 {
 
@@ -71,26 +73,26 @@ Var_Stmt::Var_Stmt(unique_ptr<Token> name, unique_ptr<Expr> initializer)
 
 void Var_Stmt::accept(Visitor *v)
 {
-    v->Visit_Var_Stmt(this);
+    v->Visit_Var_Stmt();
 }
 
-Variable_Expr::Variable_Expr(unique_ptr<Token> t) : name(move(t))
+Variable_Expr::Variable_Expr(shared_ptr<Token> t) : name(move(t))
 {
 
 }
 
 void Variable_Expr::accept(Visitor *v)
 {
-    v->Visit_Variable_Expr(this);
+    v->Visit_Variable_Expr(shared_from_this());
 }
 
 
 void Assignment_Expr::accept(Visitor *v)
 {
-    v->Visit_Assignment_Expr(this);
+    v->Visit_Assignment_Expr(shared_from_this());
 }
 
-Assignment_Expr::Assignment_Expr(unique_ptr<Token> name, unique_ptr<Expr> expr)
+Assignment_Expr::Assignment_Expr(shared_ptr<Token> name, shared_ptr<Expr> expr)
                     : name(move(name)), expr(move(expr))
 {
 
@@ -98,20 +100,20 @@ Assignment_Expr::Assignment_Expr(unique_ptr<Token> name, unique_ptr<Expr> expr)
 
 void Block_Stmt::accept(Visitor *v)
 {
-    v->Visit_Block_Stmt(this);
+    v->Visit_Block_Stmt(shared_from_this());
 }
 
-Block_Stmt::Block_Stmt(unique_ptr<vector<Stmt *>> stmts) : stmts(move(stmts))
+Block_Stmt::Block_Stmt(shared_ptr<vector<shared_ptr<Stmt>>> stmts) : stmts(move(stmts))
 {
 
 }
 
 void If_Stmt::accept(Visitor *v)
 {
-    v->Visit_If_Stmt(this);
+    v->Visit_If_Stmt(shared_from_this());
 }
 
-If_Stmt::If_Stmt(unique_ptr<Expr> c, unique_ptr<Stmt> t, unique_ptr<Stmt> e)
+If_Stmt::If_Stmt(shared_ptr<Expr> c, shared_ptr<Stmt> t, shared_ptr<Stmt> e)
                 : condition(move(c)), then_branch(move(t)), else_branch(move(e))
 {
 
@@ -119,10 +121,10 @@ If_Stmt::If_Stmt(unique_ptr<Expr> c, unique_ptr<Stmt> t, unique_ptr<Stmt> e)
 
 void Logical_Expr::accept(Visitor *v)
 {
-    v->Visit_Logical_Expr(this);
+    v->Visit_Logical_Expr(shared_from_this());
 }
 
-Logical_Expr::Logical_Expr(unique_ptr<Expr> left, unique_ptr<Token> op, unique_ptr<Expr> right)
+Logical_Expr::Logical_Expr(shared_ptr<Expr> left, shared_ptr<Token> op, shared_ptr<Expr> right)
                             : left(move(left)), op(move(op)), right(move(right))
 {
 
@@ -130,32 +132,32 @@ Logical_Expr::Logical_Expr(unique_ptr<Expr> left, unique_ptr<Token> op, unique_p
 
 void While_Stmt::accept(Visitor *v)
 {
-    v->Visit_While_Stmt(this);
+    v->Visit_While_Stmt(shared_from_this());
 }
 
-While_Stmt::While_Stmt(unique_ptr<Expr> condition, unique_ptr<Stmt> body) : condition(move(condition)), body(move(body))
+While_Stmt::While_Stmt(shared_ptr<Expr> condition, shared_ptr<Stmt> body) : condition(move(condition)), body(move(body))
 {
 
 }
 
 void Call_Expr::accept(Visitor *v)
 {
-    v->Visit_Call_Expr(this);
+    v->Visit_Call_Expr(shared_from_this());
 }
 
-Call_Expr::Call_Expr(unique_ptr<Expr> callee, unique_ptr<Token> paren, vector<Expr *> *arguments)
-                        : callee(move(callee)), paren(move(paren)), arguments(arguments)
+Call_Expr::Call_Expr(shared_ptr<Expr> callee, shared_ptr<Token> paren, shared_ptr<vector<shared_ptr<Expr>>>arguments)
+                        : callee(move(callee)), paren(move(paren)), arguments(std::move(arguments))
 {
 
 }
 
 void Function_Stmt::accept(Visitor *v)
 {
-    v->Visit_Function_Stmt(this);
+    v->Visit_Function_Stmt(shared_from_this());
 }
 
-Function_Stmt::Function_Stmt(unique_ptr<Token> name, unique_ptr<vector<Token *>> params,
-                             unique_ptr<vector<Stmt *>> body)
+Function_Stmt::Function_Stmt(shared_ptr<Token> name, shared_ptr<vector<shared_ptr<Token>>> params,
+                             shared_ptr<vector<shared_ptr<Stmt>>> body)
                                 : name(move(name)), params(move(params)), body(move(body))
 {
 
@@ -163,10 +165,10 @@ Function_Stmt::Function_Stmt(unique_ptr<Token> name, unique_ptr<vector<Token *>>
 
 void Return_Stmt::accept(Visitor *v)
 {
-    v->Visit_Return_Stmt(this);
+    v->Visit_Return_Stmt(shared_from_this());
 }
 
-Return_Stmt::Return_Stmt(unique_ptr<Token> keyword, unique_ptr<Expr> value)
+Return_Stmt::Return_Stmt(shared_ptr<Token> keyword, shared_ptr<Expr> value)
                             : keyword(move(keyword)), value(move(value))
 {
 
@@ -174,11 +176,11 @@ Return_Stmt::Return_Stmt(unique_ptr<Token> keyword, unique_ptr<Expr> value)
 
 void Class_Stmt::accept(Visitor *v)
 {
-    v->Visit_Class_Stmt(this);
+    v->Visit_Class_Stmt(shared_from_this());
 }
 
-Class_Stmt::Class_Stmt(unique_ptr<Token> name, unique_ptr<Variable_Expr> super_class,
-                       unique_ptr<vector<Function_Stmt *>> methods)
+Class_Stmt::Class_Stmt(shared_ptr<Token> name, shared_ptr<Variable_Expr> super_class,
+                       shared_ptr<vector<shared_ptr<Function_Stmt>>> methods)
                        : name(move(name)), methods(move(methods)), super_class(move(super_class))
 {
 
@@ -186,20 +188,20 @@ Class_Stmt::Class_Stmt(unique_ptr<Token> name, unique_ptr<Variable_Expr> super_c
 
 void Get_Expr::accept(Visitor *v)
 {
-    v->Visit_Get_Expr(this);
+    v->Visit_Get_Expr(shared_from_this());
 }
 
-Get_Expr::Get_Expr(unique_ptr<Expr> object, unique_ptr<Token> name) : object(move(object)), name(move(name))
+Get_Expr::Get_Expr(shared_ptr<Expr> object, shared_ptr<Token> name) : object(move(object)), name(move(name))
 {
 
 }
 
 void Set_Expr::accept(Visitor *v)
 {
-    v->Visit_Set_Expr(this);
+    v->Visit_Set_Expr(shared_from_this());
 }
 
-Set_Expr::Set_Expr(unique_ptr<Expr> object, unique_ptr<Token> name, unique_ptr<Expr> value)
+Set_Expr::Set_Expr(shared_ptr<Expr> object, shared_ptr<Token> name, shared_ptr<Expr> value)
                     : object(move(object)), name(move(name)), value(move(value))
 {
 
@@ -207,20 +209,20 @@ Set_Expr::Set_Expr(unique_ptr<Expr> object, unique_ptr<Token> name, unique_ptr<E
 
 void This_Expr::accept(Visitor *v)
 {
-    v->Visit_This_Expr(this);
+    v->Visit_This_Expr(shared_from_this());
 }
 
-This_Expr::This_Expr(unique_ptr<Token> keyword) : keyword(move(keyword))
+This_Expr::This_Expr(shared_ptr<Token> keyword) : keyword(move(keyword))
 {
 
 }
 
 void Super_Expr::accept(Visitor *v)
 {
-    v->Visit_Super_Expr(this);
+    v->Visit_Super_Expr(shared_from_this());
 }
 
-Super_Expr::Super_Expr(unique_ptr<Token> keyword, unique_ptr<Token> method)
+Super_Expr::Super_Expr(shared_ptr<Token> keyword, shared_ptr<Token> method)
                         : keyword(move(keyword)), method(move(method))
 {
 

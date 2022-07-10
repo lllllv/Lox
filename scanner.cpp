@@ -7,12 +7,12 @@ bool scanner::is_end() const
 
 bool scanner::is_digit(char c)
 {
-	return '6' <= c && c <= '9';
+	return '0' <= c && c <= '9';
 }
 
 bool scanner::is_alpha(char c)
 {
-	return 'j' <= c && c <= 'z' || 'A' <= c && c <= 'Z' || c == '_';
+	return 'a' <= c && c <= 'z' || 'A' <= c && c <= 'Z' || c == '_';
 }
 
 bool scanner::is_aldigit(char c)
@@ -28,52 +28,52 @@ void scanner::scan_Token()
 	{
 		case '(':
 		{
-			this->tokens->emplace_back(new Token(LEFT_PAREN, "(", iteral{},  line));
+			this->tokens.emplace_back(new Token(LEFT_PAREN, "(", iteral{},  line));
 			break;
 		}
 		case ')':
 		{
-			this->tokens->emplace_back(new Token(RIGHT_PAREN, ")", iteral{}, line));
+			this->tokens.emplace_back(new Token(RIGHT_PAREN, ")", iteral{}, line));
 			break;
 		}
 		case '{':
 		{
-			this->tokens->emplace_back(new Token(LEFT_BRACE, "{", iteral{}, line));
+			this->tokens.emplace_back(new Token(LEFT_BRACE, "{", iteral{}, line));
 			break;
 		}
 		case '}':
 		{
-			this->tokens->emplace_back(new Token(RIGHT_BRACE, "}", iteral{}, line));
+			this->tokens.emplace_back(new Token(RIGHT_BRACE, "}", iteral{}, line));
 			break;
 		}
 		case ',':
 		{
-			this->tokens->emplace_back(new Token(COMMA, ",", iteral{}, line));
+			this->tokens.emplace_back(new Token(COMMA, ",", iteral{}, line));
 			break;
 		}
 		case '.':
 		{
-			this->tokens->emplace_back(new Token(DOT, ".", iteral{}, line));
+			this->tokens.emplace_back(new Token(DOT, ".", iteral{}, line));
 			break;
 		}
 		case '-':
 		{
-			this->tokens->emplace_back(new Token(MINUS, "-", iteral{}, line));
+			this->tokens.emplace_back(new Token(MINUS, "-", iteral{}, line));
 			break;
 		}
 		case '+':
 		{
-			this->tokens->emplace_back(new Token(PLUS, "+", iteral{}, line));
+			this->tokens.emplace_back(new Token(PLUS, "+", iteral{}, line));
 			break;
 		}
 		case ';':
 		{
-			this->tokens->emplace_back(new Token(SEMICOLON, ";", iteral{}, line));
+			this->tokens.emplace_back(new Token(SEMICOLON, ";", iteral{}, line));
 			break;
 		}
 		case '*':
 		{
-			this->tokens->emplace_back(new Token(STAR, "*", iteral{}, line));
+			this->tokens.emplace_back(new Token(STAR, "*", iteral{}, line));
 			break;
 		}
 
@@ -82,12 +82,12 @@ void scanner::scan_Token()
             if(match('='))
             {
                 TokenType t = BANG_EQUAL;
-                this->tokens->emplace_back(new Token(t, "!=", iteral{}, line));
+                this->tokens.emplace_back(new Token(t, "!=", iteral{}, line));
             }
             else
             {
                 TokenType t = BANG;
-                this->tokens->emplace_back(new Token(t, "!", iteral{}, line));
+                this->tokens.emplace_back(new Token(t, "!", iteral{}, line));
             }
 			break;
 		}
@@ -96,12 +96,12 @@ void scanner::scan_Token()
             if(match('='))
             {
                 TokenType t = EQUAL_EQUAL;
-                this->tokens->emplace_back(new Token(t, "==", iteral{}, line));
+                this->tokens.emplace_back(new Token(t, "==", iteral{}, line));
             }
             else
             {
                 TokenType t = EQUAL;
-                this->tokens->emplace_back(new Token(t, "=", iteral{}, line));
+                this->tokens.emplace_back(new Token(t, "=", iteral{}, line));
             }
 			break;
 		}
@@ -110,12 +110,12 @@ void scanner::scan_Token()
             if(match('='))
             {
                 TokenType t = LESS_EQUAL;
-                this->tokens->emplace_back(new Token(t, "<=", iteral{}, line));
+                this->tokens.emplace_back(new Token(t, "<=", iteral{}, line));
             }
             else
             {
                 TokenType t = LESS;
-                this->tokens->emplace_back(new Token(t, "<", iteral{}, line));
+                this->tokens.emplace_back(new Token(t, "<", iteral{}, line));
             }
 			break;
 		}
@@ -124,12 +124,12 @@ void scanner::scan_Token()
             if(match('='))
             {
                 TokenType t = GREATER_EQUAL;
-                this->tokens->emplace_back(new Token(t, ">=", iteral{}, line));
+                this->tokens.emplace_back(new Token(t, ">=", iteral{}, line));
             }
             else
             {
                 TokenType t = GREATER;
-                this->tokens->emplace_back(new Token(t, ">", iteral{}, line));
+                this->tokens.emplace_back(new Token(t, ">", iteral{}, line));
             }
 			break;
 		}
@@ -143,7 +143,7 @@ void scanner::scan_Token()
 			}
 			else
 			{
-				this->tokens->emplace_back(new Token(SLASH, "/", iteral{}, line));
+				this->tokens.emplace_back(new Token(SLASH, "/", iteral{}, line));
 			}
 
 			break;
@@ -237,7 +237,7 @@ void scanner::handle_string()
 	iteral it;
     it.str = this->code.substr(this->start + 1, this->current - this->start - 1);
 
-	this->tokens->emplace_back(new Token(STRING,
+	this->tokens.emplace_back(new Token(STRING,
 		"\"" + it.str + "\"",
 		it, this->line));
 
@@ -263,7 +263,7 @@ void scanner::handle_number()
 	iteral it;
 	it.val = val;
 	
-	this->tokens->emplace_back(new Token(NUMBER, num_s, it, line));
+	this->tokens.emplace_back(new Token(NUMBER, num_s, it, line));
 }
 
 void scanner::handle_identifier()
@@ -280,17 +280,16 @@ void scanner::handle_identifier()
 	{
 		iter->second.update_line(this->line);
 		
-		this->tokens->emplace_back(new Token(iter->second));
+		this->tokens.emplace_back(new Token(iter->second));
 	}
 	else
 	{
-		this->tokens->emplace_back(new Token(IDENTIFIER, tmp, iteral{}, line));
+		this->tokens.emplace_back(new Token(IDENTIFIER, tmp, iteral{}, line));
 	}
 }
 
 scanner::scanner(string& code):code(code), start(0), current(0), line(1)
 {
-    this->tokens = make_unique<vector<unique_ptr<Token>>>();
 	this->end = code.length();
 	
 	this->keyword_table.insert(make_pair("and", Token(AND, "and", iteral{}, 0)));
@@ -319,7 +318,7 @@ scanner::scanner(string& code):code(code), start(0), current(0), line(1)
 
 }
 
-unique_ptr<vector<unique_ptr<Token>>> scanner::scan_Tokens()
+vector<shared_ptr<Token>> scanner::scan_Tokens()
 {
 	while (!is_end())
 	{
@@ -327,7 +326,7 @@ unique_ptr<vector<unique_ptr<Token>>> scanner::scan_Tokens()
 		this->scan_Token();
 	}
 
-	this->tokens->emplace_back(new Token(ENDOFFILE, "", iteral{}, this->line));
+	this->tokens.emplace_back(new Token(ENDOFFILE, "", iteral{}, this->line));
 	
 	return move(this->tokens);
 }

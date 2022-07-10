@@ -10,15 +10,15 @@
 
 class lox_class;
 
-class lox_instance : public lox_object {
+class lox_instance : public lox_object, public enable_shared_from_this<lox_instance>{
 private:
-    unordered_map<string, lox_object*> fields;
+    unordered_map<string, shared_ptr<lox_object>> fields;
 public:
-    const   lox_class* c;
-    explicit lox_instance(const lox_class* c) : c(c){};
+    const   shared_ptr<lox_class> c;
+    explicit lox_instance(const shared_ptr<lox_class>& c);
     string to_string();
-    lox_object* get(Token* name);
-    void set(Token* name, lox_object* value);
+    shared_ptr<lox_object> get(const shared_ptr<Token>& name);
+    void set(const shared_ptr<Token>& name, shared_ptr<lox_object> value);
 };
 
 

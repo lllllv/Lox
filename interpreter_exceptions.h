@@ -6,35 +6,30 @@
 #define LOX_INTERPRETER_EXCEPTIONS_H
 #include "lox_object.h"
 
+using namespace std;
+
 class parse_error : public exception {
 
-    const char * what () const noexcept override
-    {
-        return "parse error!";
-    }
+    const char * what () const noexcept override;
 };
 
 class interpreter_runtime_error : public runtime_error {
 public:
-    Token* t;
+    shared_ptr<Token> t;
 
-    interpreter_runtime_error(Token* t, const string& s) : runtime_error(s), t(t){};
-    /*const char * what () const noexcept override
-    {
-        return "interpreter runtime error!";
-    }*/
+    interpreter_runtime_error(shared_ptr<Token> t, const string& s);
 };
 
 class return_control_flow_exception : public runtime_error {
 public:
-    lox_object* value;
-    return_control_flow_exception(const string &s, lox_object *value) : runtime_error(s), value(value){};
+    shared_ptr<lox_object> value;
+    return_control_flow_exception(const string &s, shared_ptr<lox_object> value);
 };
 
 class return_result_exception : public runtime_error {
 public:
-    lox_object* value;
-    return_result_exception(const string &s, lox_object *value) : runtime_error(s), value(value){};
+    shared_ptr<lox_object> value;
+    return_result_exception(const string &s, shared_ptr<lox_object> value);
 };
 
 
