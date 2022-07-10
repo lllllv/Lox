@@ -2,7 +2,7 @@
 
 void AST_Printer::parenthesize(const string& name, initializer_list<shared_ptr<Expr>> exprs) {
     cout << "(" << name;
-    for(auto i : exprs)
+    for(const auto& i : exprs)
     {
         cout << " ";
         i->accept(this);
@@ -26,10 +26,9 @@ void AST_Printer::Visit_Grouping_Expr(shared_ptr<Grouping_Expr> g) {
     parenthesize("group", {g->exp});
 }
 
-void AST_Printer::print(shared_ptr<Expr> exp) {
+void AST_Printer::print(const shared_ptr<Expr>& exp) {
     if(exp != nullptr)
         exp->accept(this);
-    // cout << endl;
 }
 
 void AST_Printer::Visit_Expression_Stmt(shared_ptr<Expression_Stmt> expression) {

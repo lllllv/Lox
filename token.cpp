@@ -1,12 +1,13 @@
 #include "token.h"
 #include <sstream>
+#include <utility>
 
-Token::Token(TokenType type, string lexeme,iteral it, int line):type(type), lexeme(lexeme), it(it), line(line)
+Token::Token(TokenType type, string lexeme, iteral it, int line):type(type), lexeme(move(lexeme)), it(move(it)), line(line)
 {
 
 }
 
-string Token::to_string()
+string Token::to_string() const
 {
     string s;
     switch (this->type)
@@ -130,6 +131,8 @@ string Token::to_string()
             break;
         case WHILE:
             s = "WHILE";
+            break;
+        default:
             break;
     }
     stringstream ss;

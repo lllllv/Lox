@@ -23,7 +23,7 @@ public:
 
 
     void parenthesize(const string& name, initializer_list<shared_ptr<Expr>> exprs);
-    void print(shared_ptr<Expr> exp);
+    void print(const shared_ptr<Expr>& exp);
     void print(vector<shared_ptr<Stmt>>& stmts);
 
     void Visit_Expression_Stmt(shared_ptr<Expression_Stmt>) override;

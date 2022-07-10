@@ -23,27 +23,6 @@ lox_object::lox_object(string &s) {
     type = STRING;
 }
 
-void lox_object::print()
-{
-    switch(this->type)
-    {
-        case NIL:
-            cout << "NIL";
-            break;
-        case TRUE:
-            cout << "TRUE";
-            break;
-        case FALSE:
-            cout << "FALSE";
-            break;
-        case NUMBER:
-            cout << this->num;
-            break;
-        case STRING:
-            cout << this->str;
-    }
-}
-
 
 
 

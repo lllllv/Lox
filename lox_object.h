@@ -21,7 +21,6 @@ public:
     explicit lox_object(string&& s);
     explicit lox_object(double num);
     explicit lox_object(bool boolean);
-    void print();
 };
 
 
