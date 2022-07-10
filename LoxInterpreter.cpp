@@ -92,13 +92,7 @@ LoxInterpreter::LoxInterpreter(int argc, char** argv)
 		exit(0);
 	}
 	else if (argc == 2)
-	{
-        cout << argv[1] << endl;
 		run_file(argv[1]);
-	}
 	else
-	{
         run_prompt();
-	}
-	//run_file("test.txt");
 }
