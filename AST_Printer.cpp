@@ -1,7 +1,3 @@
-//
-// Created by lvxia on 2022/6/1.
-//
-/*
 #include "AST_Printer.h"
 
 void AST_Printer::parenthesize(const string& name, initializer_list<shared_ptr<Expr>> exprs) {
@@ -123,5 +119,4 @@ void AST_Printer::Visit_Return_Stmt(shared_ptr<Return_Stmt>)
 
 }
 
-*/
 

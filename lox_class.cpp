@@ -1,7 +1,3 @@
-//
-// Created by 吕孝焱 on 2022/6/26.
-//
-
 #include "lox_class.h"
 
 #include <utility>
@@ -13,7 +9,7 @@ string lox_class::to_string()
 
 shared_ptr<lox_object> lox_class::call(interpreter &i, vector<shared_ptr<lox_object>> &arguments)
 {
-    auto instance = make_shared<lox_instance>(shared_from_this());
+    auto instance = make_shared<lox_instance>(static_pointer_cast<lox_class>(shared_from_this()));
     auto initializer = find_method("init");
     if(initializer != nullptr)
         initializer->bind(instance)->call(i, arguments);

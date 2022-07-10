@@ -1,7 +1,3 @@
-//
-// Created by 吕孝焱 on 2022/6/25.
-//
-
 #ifndef LOX_RESOLVER_H
 #define LOX_RESOLVER_H
 #include <vector>

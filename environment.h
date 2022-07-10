@@ -1,7 +1,3 @@
-//
-// Created by 吕孝焱 on 2022/6/10.
-//
-
 #ifndef LOX_ENVIRONMENT_H
 #define LOX_ENVIRONMENT_H
 
@@ -25,12 +21,12 @@ public:
     explicit environment(shared_ptr<environment> enclosing);
     void define(const string& name, shared_ptr<lox_object> l);
     void assign(const Token& name, const shared_ptr<lox_object>& l);
-    void assign_at(size_t dist, const Token& name, const shared_ptr<lox_object>& l);
+    void assign_at(int dist, const Token& name, const shared_ptr<lox_object>& l);
     shared_ptr<lox_object> get(const Token& name);
-    shared_ptr<lox_object> get_at(size_t dist, const shared_ptr<Token>& name);
+    shared_ptr<lox_object> get_at(int dist, const shared_ptr<Token>& name);
     shared_ptr<lox_object> get(const string& name);
-    shared_ptr<lox_object> get_at(size_t dist, const string& name);
-    shared_ptr<environment> ancestor(size_t dist);
+    shared_ptr<lox_object> get_at(int dist, const string& name);
+    shared_ptr<environment> ancestor(int dist);
 };
 
 #endif //LOX_ENVIRONMENT_H

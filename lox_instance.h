@@ -1,7 +1,3 @@
-//
-// Created by 吕孝焱 on 2022/6/26.
-//
-
 #ifndef LOX_LOX_INSTANCE_H
 #define LOX_LOX_INSTANCE_H
 #include <unordered_map>
@@ -10,7 +6,7 @@
 
 class lox_class;
 
-class lox_instance : public lox_object, public enable_shared_from_this<lox_instance>{
+class lox_instance : public lox_object/*, public enable_shared_from_this<lox_instance>*/{
 private:
     unordered_map<string, shared_ptr<lox_object>> fields;
 public:

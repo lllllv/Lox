@@ -1,10 +1,4 @@
-//
-// Created by lvxia on 2022/6/5.
-//
-
 #include "parser.h"
-
-
 
 
 bool parser::match(TokenType t) {
@@ -190,7 +184,7 @@ void parser::synchronize() {
     }
 }
 
-vector<shared_ptr<Stmt>> parser::parse()
+vector<shared_ptr<Stmt>> parser::parse_stmt()
 {
     vector<shared_ptr<Stmt>> res;
     while(!is_end())
@@ -493,6 +487,11 @@ parser::parser(vector<shared_ptr<Token>> tokens)
 {
     this->current = 0;
     this->tokens = move(tokens);
+}
+
+shared_ptr<Expr> parser::parse_expr()
+{
+    return expression();
 }
 
 

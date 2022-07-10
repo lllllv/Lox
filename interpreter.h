@@ -1,7 +1,3 @@
-//
-// Created by lvxia on 2022/6/7.
-//
-
 #ifndef LOX_INTERPRETER_H
 #define LOX_INTERPRETER_H
 #include <stack>
@@ -21,7 +17,7 @@ using namespace std;
 
 class interpreter : public Visitor{
 private:
-    unordered_map<shared_ptr<Expr>, size_t> locals;
+    unordered_map<shared_ptr<Expr>, int> locals;
 
     static bool is_truthy(const lox_object&);
     static bool is_equal(const lox_object&, const lox_object&);
@@ -63,7 +59,7 @@ public:
     interpreter();
     void eval(const shared_ptr<Expr>& exp);
     void interpret(const vector<shared_ptr<Stmt>>& stmts);
-    void resolve(const shared_ptr<Expr>& expr, size_t depth);
+    void resolve(const shared_ptr<Expr>& expr, int depth);
 };
 
 

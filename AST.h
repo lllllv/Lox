@@ -1,16 +1,8 @@
-//
-// Created by lvxia on 2022/6/1.
-//
-
-#ifndef LOX_AST_H
-#define LOX_AST_H
+#pragma once
 #include <utility>
 
 #include "scanner.h"
 #include "visitor.h"
-
-class AST_Node;
-class Expr;
 
 
 class AST_Node {
@@ -21,20 +13,20 @@ public:
 };
 
 
-class Expr : public AST_Node {
+class Expr : public AST_Node, public enable_shared_from_this<Expr> {
 public:
     Expr() = default;
     ~Expr() override = default;
 };
 
-class Literal_Expr : public Expr, enable_shared_from_this<Literal_Expr> {
+class Literal_Expr : public Expr/*, enable_shared_from_this<Literal_Expr>*/ {
 public:
     shared_ptr<Token> t;
     explicit Literal_Expr(shared_ptr<Token> t);
     void accept(Visitor* v) override;
 };
 
-class Unary_Expr : public Expr, enable_shared_from_this<Unary_Expr> {
+class Unary_Expr : public Expr/*, enable_shared_from_this<Unary_Expr>*/ {
 public:
     shared_ptr<Token> op;
     shared_ptr<Expr> operand;
@@ -42,7 +34,7 @@ public:
     void accept(Visitor* v) override;
 };
 
-class Binary_Expr : public Expr, enable_shared_from_this<Binary_Expr> {
+class Binary_Expr : public Expr/*, enable_shared_from_this<Binary_Expr>*/ {
 public:
     shared_ptr<Token> op;
     shared_ptr<Expr> lhs;
@@ -51,21 +43,21 @@ public:
     void accept(Visitor* v) override;
 };
 
-class Grouping_Expr : public Expr, enable_shared_from_this<Grouping_Expr> {
+class Grouping_Expr : public Expr/*, enable_shared_from_this<Grouping_Expr>*/ {
 public:
     shared_ptr<Expr> exp;
     explicit Grouping_Expr(shared_ptr<Expr> exp);
     void accept(Visitor* v) override;
 };
 
-class Variable_Expr : public Expr, enable_shared_from_this<Variable_Expr> {
+class Variable_Expr : public Expr/*, enable_shared_from_this<Variable_Expr>*/ {
 public:
     shared_ptr<Token> name;
     explicit Variable_Expr(shared_ptr<Token> t);
     void accept(Visitor* v) override;
 };
 
-class Assignment_Expr : public Expr, enable_shared_from_this<Assignment_Expr> {
+class Assignment_Expr : public Expr/*, enable_shared_from_this<Assignment_Expr>*/ {
 public:
     shared_ptr<Token> name;
     shared_ptr<Expr> expr;
@@ -73,7 +65,7 @@ public:
     void accept(Visitor* v) override;
 };
 
-class Logical_Expr : public Expr, enable_shared_from_this<Logical_Expr> {
+class Logical_Expr : public Expr/*, enable_shared_from_this<Logical_Expr>*/ {
 public:
     shared_ptr<Expr> left, right;
     shared_ptr<Token> op;
@@ -81,7 +73,7 @@ public:
     void accept(Visitor* v) override;
 };
 
-class Call_Expr : public Expr, enable_shared_from_this<Call_Expr> {
+class Call_Expr : public Expr/*, enable_shared_from_this<Call_Expr>*/ {
 public:
     shared_ptr<Expr> callee;
     shared_ptr<Token> paren;
@@ -90,7 +82,7 @@ public:
     void accept(Visitor* v) override;
 };
 
-class Get_Expr : public Expr, enable_shared_from_this<Get_Expr> {
+class Get_Expr : public Expr/*, enable_shared_from_this<Get_Expr>*/ {
 public:
     shared_ptr<Expr> object;
     shared_ptr<Token> name;
@@ -98,7 +90,7 @@ public:
     void accept(Visitor* v) override;
 };
 
-class Set_Expr : public Expr, enable_shared_from_this<Set_Expr> {
+class Set_Expr : public Expr/*, enable_shared_from_this<Set_Expr>*/ {
 public:
     shared_ptr<Expr> object;
     shared_ptr<Token> name;
@@ -107,14 +99,14 @@ public:
     void accept(Visitor* v) override;
 };
 
-class This_Expr : public Expr, enable_shared_from_this<This_Expr> {
+class This_Expr : public Expr/*, enable_shared_from_this<This_Expr>*/ {
 public:
     shared_ptr<Token> keyword;
     explicit This_Expr(shared_ptr<Token> keyword);
     void accept(Visitor* v) override;
 };
 
-class Super_Expr : public Expr, enable_shared_from_this<Super_Expr> {
+class Super_Expr : public Expr/*, enable_shared_from_this<Super_Expr>*/ {
 public:
     shared_ptr<Token> keyword, method;
     Super_Expr(shared_ptr<Token> keyword, shared_ptr<Token> method);
@@ -198,5 +190,3 @@ public:
     Class_Stmt(shared_ptr<Token> name, shared_ptr<Variable_Expr> super_class, shared_ptr<vector<shared_ptr<Function_Stmt>>> methods);
     void accept(Visitor* v) override;
 };
-
-#endif //LOX_AST_H

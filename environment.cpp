@@ -1,7 +1,3 @@
-//
-// Created by 吕孝焱 on 2022/6/10.
-//
-
 #include "environment.h"
 
 #include <utility>
@@ -52,12 +48,12 @@ environment::environment(shared_ptr<environment> enclosing) : enclosing(move(enc
 
 }
 
-shared_ptr<lox_object> environment::get_at(size_t dist, const shared_ptr<Token>& name)
+shared_ptr<lox_object> environment::get_at(int dist, const shared_ptr<Token>& name)
 {
     return ancestor(dist)->get(*name);
 }
 
-shared_ptr<environment> environment::ancestor(size_t dist)
+shared_ptr<environment> environment::ancestor(int dist)
 {
     auto env = shared_from_this();
     for(int i = 0; i < dist; i++)
@@ -65,12 +61,12 @@ shared_ptr<environment> environment::ancestor(size_t dist)
     return env;
 }
 
-void environment::assign_at(size_t dist, const Token &name, const shared_ptr<lox_object>& l)
+void environment::assign_at(int dist, const Token &name, const shared_ptr<lox_object>& l)
 {
     ancestor(dist)->assign(name, l);
 }
 
-shared_ptr<lox_object> environment::get_at(size_t dist, const string &name)
+shared_ptr<lox_object> environment::get_at(int dist, const string &name)
 {
     return ancestor(dist)->get(name);
 }

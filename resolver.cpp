@@ -1,7 +1,3 @@
-//
-// Created by 吕孝焱 on 2022/6/25.
-//
-
 #include "resolver.h"
 
 extern bool had_error;
@@ -91,7 +87,7 @@ void resolver::error(const Token &t, const string &msg)
 
 void resolver::resolve_local(const shared_ptr<Expr>& expr, const shared_ptr<Token>& name)
 {
-    for(size_t i = scopes.size() - 1; i >= 0; i--)
+    for(int i = scopes.size() - 1; i >= 0; i--)
     {
         if(scopes[i].find(name->lexeme) != scopes[i].end())
         {

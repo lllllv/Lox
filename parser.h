@@ -1,7 +1,3 @@
-//
-// Created by lvxia on 2022/6/5.
-//
-
 #ifndef LOX_PARSER_H
 #define LOX_PARSER_H
 
@@ -18,7 +14,8 @@ class parser {
 public:
     explicit parser(vector<shared_ptr<Token>> tokens);
 
-    vector<shared_ptr<Stmt>> parse();
+    vector<shared_ptr<Stmt>> parse_stmt();
+    shared_ptr<Expr> parse_expr();
 
 private:
     vector<shared_ptr<Token>> tokens;

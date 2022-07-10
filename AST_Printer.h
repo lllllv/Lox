@@ -1,7 +1,3 @@
-//
-// Created by lvxia on 2022/6/1.
-//
-
 #ifndef LOX_AST_PRINTER_H
 #define LOX_AST_PRINTER_H
 #include <initializer_list>
@@ -10,7 +6,6 @@
 #include "visitor.h"
 #include "AST.h"
 
-/*
 using namespace std;
 
 class AST_Printer : public Visitor {
@@ -40,7 +35,6 @@ public:
     void Visit_Function_Stmt(shared_ptr<Function_Stmt>) override;
     void Visit_Return_Stmt(shared_ptr<Return_Stmt>) override;
 };
-*/
 
 
 

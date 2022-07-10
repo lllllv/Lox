@@ -1,7 +1,3 @@
-//
-// Created by 吕孝焱 on 2022/6/26.
-//
-
 #include "lox_instance.h"
 
 #include <utility>
@@ -24,7 +20,7 @@ shared_ptr<lox_object> lox_instance::get(const shared_ptr<Token>& name)
 
     auto method = c->find_method(name->lexeme);
     if(method != nullptr)
-        return method->bind(shared_from_this());
+        return method->bind(static_pointer_cast<lox_instance>(shared_from_this()));
 
     throw interpreter_runtime_error(name, "Undefined property '" + name->lexeme + "'.");
 }

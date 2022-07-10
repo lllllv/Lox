@@ -1,7 +1,3 @@
-//
-// Created by lvxia on 2022/6/7.
-//
-
 #include "lox_object.h"
 
 lox_object::lox_object() {

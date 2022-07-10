@@ -1,7 +1,3 @@
-//
-// Created by lvxia on 2022/6/7.
-//
-
 #include "interpreter.h"
 
 #include <utility>
@@ -254,7 +250,7 @@ void interpreter::Visit_Assignment_Expr(shared_ptr<Assignment_Expr> expr)
 
     if(locals.find(expr) != locals.end())
     {
-        size_t dist = locals[expr];
+        int dist = locals[expr];
         env->assign_at(dist, *expr->name, l);
     }
     else
@@ -267,7 +263,6 @@ void interpreter::Visit_Block_Stmt(shared_ptr<Block_Stmt> stmt)
 {
     auto new_env = make_shared<environment>(this->env);
     _execute_Block(stmt->stmts, new_env);
-    //delete new_env;
 }
 
 void interpreter::_execute_Block(const shared_ptr<vector<shared_ptr<Stmt>>>& stmts, shared_ptr<environment> new_env)
@@ -295,7 +290,7 @@ void interpreter::_execute_Block(const shared_ptr<vector<shared_ptr<Stmt>>>& stm
 interpreter::interpreter()
 {
     this->globals = make_shared<environment>();
-    this->globals->define("native_clock", make_shared<native_clock>());
+    this->globals->define("clock", make_shared<native_clock>());
     this->env = globals;
 }
 
@@ -398,7 +393,7 @@ void interpreter::Visit_Return_Stmt(shared_ptr<Return_Stmt> stmt)
     throw return_control_flow_exception("using exception to clear call stack and return a value", value);
 }
 
-void interpreter::resolve(const shared_ptr<Expr>& expr, size_t depth)
+void interpreter::resolve(const shared_ptr<Expr>& expr, int depth)
 {
     locals[expr] = depth;
 }
@@ -407,7 +402,7 @@ shared_ptr<lox_object> interpreter::lookup_variable(const shared_ptr<Token>& nam
 {
     if(locals.find(expr) != locals.end())
     {
-        size_t dist = locals[expr];
+        int dist = locals[expr];
         return env->get_at(dist, name);
     }
     else
@@ -487,7 +482,7 @@ void interpreter::Visit_This_Expr(shared_ptr<This_Expr> expr)
 
 void interpreter::Visit_Super_Expr(shared_ptr<Super_Expr> expr)
 {
-    size_t dist = locals[expr];
+    int dist = locals[expr];
     auto super_class = dynamic_pointer_cast<lox_class>(env->get_at(dist, "super"));
     auto instance = dynamic_pointer_cast<lox_instance>(env->get_at(dist - 1, "this"));
     auto method = super_class->find_method(expr->method->lexeme);

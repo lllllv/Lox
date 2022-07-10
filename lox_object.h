@@ -1,7 +1,3 @@
-//
-// Created by lvxia on 2022/6/7.
-//
-
 #ifndef LOX_LOX_OBJECT_H
 #define LOX_LOX_OBJECT_H
 
@@ -10,7 +6,7 @@
 #include "token.h"
 using namespace std;
 
-class lox_object {
+class lox_object : public enable_shared_from_this<lox_object>{
 public:
     double num;
     string str;

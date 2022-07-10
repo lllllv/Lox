@@ -1,7 +1,3 @@
-//
-// Created by 吕孝焱 on 2022/6/18.
-//
-
 #ifndef LOX_LOX_CALLABLE_H
 #define LOX_LOX_CALLABLE_H
 #include "AST.h"
@@ -14,7 +10,7 @@
 class interpreter;
 class environment;
 
-class lox_callable : public lox_object {
+class lox_callable : public lox_object/*, public enable_shared_from_this<lox_callable> */{
 public:
     virtual int arity() = 0;
     virtual shared_ptr<lox_object> call(interpreter& i, vector<shared_ptr<lox_object>>& arguments) = 0;

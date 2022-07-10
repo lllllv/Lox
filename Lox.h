@@ -1,22 +1,4 @@
-#pragma once
-#include <cstdlib>
-#include <iostream>
-#include <fstream>
-#include <string>
+﻿#pragma once
 
 
 
-using namespace std;
-
-class Lox
-{
-private:
-	void run_file(const string& file);
-
-    [[noreturn]] void run_promt();
-
-	void run_code(string code);
-
-public:
-	Lox(int argc, char** argv);
-};

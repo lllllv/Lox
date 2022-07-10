@@ -1,7 +1,3 @@
-//
-// Created by 吕孝焱 on 2022/6/19.
-//
-
 #ifndef LOX_NATIVE_FUNCTIONS_H
 #define LOX_NATIVE_FUNCTIONS_H
 #include <chrono>

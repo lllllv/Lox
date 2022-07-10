@@ -1,7 +1,3 @@
-//
-// Created by 吕孝焱 on 2022/6/26.
-//
-
 #ifndef LOX_LOX_CLASS_H
 #define LOX_LOX_CLASS_H
 #include <unordered_map>
@@ -13,7 +9,7 @@ class lox_instance;
 
 using namespace std;
 
-class lox_class : public lox_callable, enable_shared_from_this<lox_class> {
+class lox_class : public lox_callable/*, enable_shared_from_this<lox_class>*/ {
 public:
     string name;
     shared_ptr<lox_class> super_class;

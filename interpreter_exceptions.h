@@ -1,7 +1,3 @@
-//
-// Created by 吕孝焱 on 2022/6/10.
-//
-
 #ifndef LOX_INTERPRETER_EXCEPTIONS_H
 #define LOX_INTERPRETER_EXCEPTIONS_H
 #include "lox_object.h"
