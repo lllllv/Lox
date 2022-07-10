@@ -6,7 +6,7 @@ implementation in the book is in Java.
 # Build and Usages
 To build the project, CMake 3.8 or higher is required.
 ```shell
-mkdir build
+mkdir build && cd build
 cmake .. && make
 ```
 Execute a Lox source file:
