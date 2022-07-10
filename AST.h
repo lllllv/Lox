@@ -27,14 +27,14 @@ public:
     ~Expr() override = default;
 };
 
-class Literal_Expr : public Expr {
+class Literal_Expr : public Expr, enable_shared_from_this<Literal_Expr> {
 public:
     shared_ptr<Token> t;
     explicit Literal_Expr(shared_ptr<Token> t);
     void accept(Visitor* v) override;
 };
 
-class Unary_Expr : public Expr {
+class Unary_Expr : public Expr, enable_shared_from_this<Unary_Expr> {
 public:
     shared_ptr<Token> op;
     shared_ptr<Expr> operand;
@@ -42,7 +42,7 @@ public:
     void accept(Visitor* v) override;
 };
 
-class Binary_Expr : public Expr {
+class Binary_Expr : public Expr, enable_shared_from_this<Binary_Expr> {
 public:
     shared_ptr<Token> op;
     shared_ptr<Expr> lhs;
@@ -51,21 +51,21 @@ public:
     void accept(Visitor* v) override;
 };
 
-class Grouping_Expr : public Expr {
+class Grouping_Expr : public Expr, enable_shared_from_this<Grouping_Expr> {
 public:
     shared_ptr<Expr> exp;
     explicit Grouping_Expr(shared_ptr<Expr> exp);
     void accept(Visitor* v) override;
 };
 
-class Variable_Expr : public Expr {
+class Variable_Expr : public Expr, enable_shared_from_this<Variable_Expr> {
 public:
     shared_ptr<Token> name;
     explicit Variable_Expr(shared_ptr<Token> t);
     void accept(Visitor* v) override;
 };
 
-class Assignment_Expr : public Expr {
+class Assignment_Expr : public Expr, enable_shared_from_this<Assignment_Expr> {
 public:
     shared_ptr<Token> name;
     shared_ptr<Expr> expr;
@@ -73,7 +73,7 @@ public:
     void accept(Visitor* v) override;
 };
 
-class Logical_Expr : public Expr {
+class Logical_Expr : public Expr, enable_shared_from_this<Logical_Expr> {
 public:
     shared_ptr<Expr> left, right;
     shared_ptr<Token> op;
@@ -81,7 +81,7 @@ public:
     void accept(Visitor* v) override;
 };
 
-class Call_Expr : public Expr {
+class Call_Expr : public Expr, enable_shared_from_this<Call_Expr> {
 public:
     shared_ptr<Expr> callee;
     shared_ptr<Token> paren;
@@ -90,7 +90,7 @@ public:
     void accept(Visitor* v) override;
 };
 
-class Get_Expr : public Expr {
+class Get_Expr : public Expr, enable_shared_from_this<Get_Expr> {
 public:
     shared_ptr<Expr> object;
     shared_ptr<Token> name;
@@ -98,7 +98,7 @@ public:
     void accept(Visitor* v) override;
 };
 
-class Set_Expr : public Expr {
+class Set_Expr : public Expr, enable_shared_from_this<Set_Expr> {
 public:
     shared_ptr<Expr> object;
     shared_ptr<Token> name;
@@ -107,14 +107,14 @@ public:
     void accept(Visitor* v) override;
 };
 
-class This_Expr : public Expr {
+class This_Expr : public Expr, enable_shared_from_this<This_Expr> {
 public:
     shared_ptr<Token> keyword;
     explicit This_Expr(shared_ptr<Token> keyword);
     void accept(Visitor* v) override;
 };
 
-class Super_Expr : public Expr {
+class Super_Expr : public Expr, enable_shared_from_this<Super_Expr> {
 public:
     shared_ptr<Token> keyword, method;
     Super_Expr(shared_ptr<Token> keyword, shared_ptr<Token> method);
@@ -122,20 +122,20 @@ public:
 };
 
 
-class Stmt : public AST_Node {
+class Stmt : public AST_Node, public enable_shared_from_this<Stmt> {
 public:
     Stmt() = default;
     ~Stmt() override = default;
 };
 
-class Expression_Stmt : public Stmt{
+class Expression_Stmt : public Stmt {
 public:
     shared_ptr<Expr> expr;
     explicit Expression_Stmt(shared_ptr<Expr> expr);
     void accept(Visitor* v) override;
 };
 
-class Print_Stmt : public Stmt {
+class Print_Stmt : public Stmt/*, private enable_shared_from_this<Print_Stmt>*/ {
 public:
     shared_ptr<Expr> expr;
     explicit Print_Stmt(shared_ptr<Expr> expr);
@@ -150,14 +150,14 @@ public:
     void accept(Visitor* v) override;
 };
 
-class Block_Stmt : public Stmt {
+class Block_Stmt : public Stmt/*, enable_shared_from_this<Block_Stmt>*/ {
 public:
     shared_ptr<vector<shared_ptr<Stmt>>> stmts;
     explicit Block_Stmt(shared_ptr<vector<shared_ptr<Stmt>>> stmts);
     void accept(Visitor* v) override;
 };
 
-class If_Stmt : public Stmt {
+class If_Stmt : public Stmt/*, enable_shared_from_this<If_Stmt>*/ {
 public:
     shared_ptr<Expr> condition;
     shared_ptr<Stmt> then_branch, else_branch;
@@ -165,7 +165,7 @@ public:
     void accept(Visitor* v) override;
 };
 
-class While_Stmt : public Stmt {
+class While_Stmt : public Stmt/*, enable_shared_from_this<While_Stmt>*/ {
 public:
     shared_ptr<Expr> condition;
     shared_ptr<Stmt> body;
@@ -173,7 +173,7 @@ public:
     void accept(Visitor* v) override;
 };
 
-class Function_Stmt : public Stmt {
+class Function_Stmt : public Stmt/*, enable_shared_from_this<Function_Stmt>*/ {
 public:
     shared_ptr<Token> name;
     shared_ptr<vector<shared_ptr<Token>>> params;
@@ -182,7 +182,7 @@ public:
     void accept(Visitor* v) override;
 };
 
-class Return_Stmt : public Stmt {
+class Return_Stmt : public Stmt/*, enable_shared_from_this<Return_Stmt>*/ {
 public:
     shared_ptr<Token> keyword;
     shared_ptr<Expr> value;
@@ -190,7 +190,7 @@ public:
     void accept(Visitor* v) override;
 };
 
-class Class_Stmt : public Stmt {
+class Class_Stmt : public Stmt/*, enable_shared_from_this<Class_Stmt>*/ {
 public:
     shared_ptr<Token> name;
     shared_ptr<Variable_Expr> super_class;

@@ -51,7 +51,7 @@ Expression_Stmt::Expression_Stmt(shared_ptr<Expr> expr) : expr(move(expr))
 
 void Expression_Stmt::accept(Visitor *v)
 {
-    v->Visit_Expression_Stmt(dynamic_pointer_cast<Expression_Stmt>(AST_Node::shared_from_this()));
+    v->Visit_Expression_Stmt(shared_from_this());
 }
 
 
@@ -73,7 +73,7 @@ Var_Stmt::Var_Stmt(shared_ptr<Token> name, shared_ptr<Expr> initializer)
 
 void Var_Stmt::accept(Visitor *v)
 {
-    v->Visit_Var_Stmt();
+    v->Visit_Var_Stmt(static_pointer_cast<Var_Stmt>(shared_from_this()));
 }
 
 Variable_Expr::Variable_Expr(shared_ptr<Token> t) : name(move(t))
