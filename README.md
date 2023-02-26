@@ -1,6 +1,6 @@
 # A Tree-walk Lox Interpreter 
 
-C++ implementation of the Lox interpreter in [Crafting Interpreters](http://craftinginterpreters.com). The original 
+C++ implementation of the Lox interpreter in [*Crafting Interpreters*](http://craftinginterpreters.com). The original 
 implementation in the book is in Java. 
 
 # Build and Usages
