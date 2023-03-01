@@ -3,6 +3,8 @@
 #include <initializer_list>
 #include <string>
 #include <iostream>
+#include <memory>
+
 #include "visitor.h"
 #include "AST.h"
 

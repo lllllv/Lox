@@ -1,5 +1,6 @@
 #ifndef LOX_VISITOR_H
 #define LOX_VISITOR_H
+#include <memory>
 
 class Expr;
 class Literal_Expr;
