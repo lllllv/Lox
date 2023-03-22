@@ -1,9 +1,11 @@
 #ifndef LOX_PARSER_H
 #define LOX_PARSER_H
 
+
+#include <memory>
 #include <vector>
 #include <exception>
-#include <memory>
+
 #include "token.h"
 #include "AST.h"
 #include "interpreter_exceptions.h"
